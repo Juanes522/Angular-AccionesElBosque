@@ -1,0 +1,51 @@
+<div class="start-container general-font">
+    <header class="main-header">
+        <div class="logo">Acciones ElBosque</div>
+        <button class="hamburger-btn" (click)="toggleMenu()">
+            ☰
+        </button>
+        
+        <nav class="nav-links" [class.active]="menuActive">
+            <a routerLink="/register" class="nav-link">Registrarse</a>
+            <a routerLink="/login" class="nav-link">Entrar</a>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <section class="intro-section">
+            <h1>Plataforma de Trading</h1>
+            <p class="subtitle">Invierte en los mercados internacionales</p>
+        </section>
+
+        <section class="features-section">
+            <div class="feature-card">
+                <h3>Mercados Globales</h3>
+                <p>Accede a las principales bolsas de valores del mundo</p>
+            </div>
+            <div class="feature-card">
+                <h3>Asesoría Expertos</h3>
+                <p>Comisionistas certificados para guiar tus inversiones</p>
+            </div>
+            <div class="feature-card">
+                <h3>Seguridad Avanzada</h3>
+                <p>Protección MFA y cifrado de última generación</p>
+            </div>
+            <div class="feature-card">
+                <h3>Alertas Inteligentes</h3>
+                <p>Notificaciones en tiempo real cuando tus acciones alcancen objetivos</p>
+            </div>
+            <div class="feature-card">
+                <h3>Portafolio Personalizado</h3>
+                <p>Seguimiento detallado de todas tus inversiones en un solo lugar</p>
+            </div>
+            <div class="feature-card">
+                <h3>Análisis en Tiempo Real</h3>
+                <p>Gráficos interactivos y datos de mercado actualizados al instante</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <p>© 2023 Acciones ElBosque. Todos los derechos reservados.</p>
+    </footer>
+</div>

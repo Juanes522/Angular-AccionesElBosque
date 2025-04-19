@@ -1,0 +1,20 @@
+<div class="mfa-container">
+    <div class="mfa-card">
+      <h2>Verificación MFA</h2>
+      <p>Ingresa el código de 6 dígitos</p>
+      
+      <div class="code-inputs">
+        <input *ngFor="let i of [0,1,2,3,4,5]" 
+               type="text" 
+               maxlength="1" 
+               [(ngModel)]="mfaCode[i]" 
+               (input)="onInputChange($event, i)"
+               (keydown)="onKeyDown($event, i)"
+               [name]="'mfa-' + i"
+               autocomplete="off">
+      </div>
+  
+      <button class="verify-button" (click)="verifyCode()">Verificar</button>
+      
+    </div>
+  </div>
