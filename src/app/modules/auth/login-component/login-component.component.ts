@@ -11,12 +11,19 @@ export class LoginComponentComponent {
   email: string = '';
   password: string = '';
 
-  constructor(private router: Router){}
+  constructor(
+    private router: Router
+  ){}
 
-  onSubmit(){
-    this.router.navigate(['/dashboard'])
+  isLoading: boolean = false;
+  onSubmit() {
+    this.isLoading = true;
 
-    console.log('Email: ', this.email);
-    console.log('Password: ', this.password);
+    console.log('Credenciales ingresadas:', { email: this.email, password: this.password });
+    
+    setTimeout(() => {
+      this.router.navigate(['/mfa-verify']);
+      this.isLoading = false;
+    }, 1000);
   }
 }

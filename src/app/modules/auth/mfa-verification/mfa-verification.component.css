@@ -1,0 +1,75 @@
+.mfa-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #1e1e1e;
+  padding: 1rem;
+  color: white;
+  font-family: "BROmega", sans-serif;
+}
+
+.mfa-card {
+  background-color: #2d2d2d;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.mfa-card h2{
+  font-family: "BROmega", sans-serif;
+}
+
+.font h2{
+  font-family: "BROmega", sans-serif;
+}
+
+.code-inputs {
+  display: flex;
+  justify-content: space-between;
+  margin: 2rem 0;
+}
+
+.code-inputs input {
+  width: 40px;
+  height: 50px;
+  text-align: center;
+  font-size: 1.5rem;
+  border: 2px solid #444;
+  border-radius: 4px;
+  background-color: #3d3d3d;
+  color: white;
+}
+
+.verify-button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #8937ee;
+  color: #121212;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  font-family: "BROmega", sans-serif;
+}
+
+.resend-text {
+  margin-top: 1.5rem;
+  color: #a0a0a0;
+}
+
+.resend-text span {
+  color: #8937ee;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+  .code-inputs input {
+    width: 35px;
+    height: 45px;
+    font-size: 1.2rem;
+  }
+}
