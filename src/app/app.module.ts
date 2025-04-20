@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { LoginComponentComponent } from './modules/auth/login-component/login-component.component';
-
 import { CommonModule } from '@angular/common';
+
+import { LoginComponentComponent } from './modules/auth/login-component/login-component.component';
 import { MfaVerificationComponent } from './modules/auth/mfa-verification/mfa-verification.component';
 import { StartComponentComponent } from './modules/start/start-component/start-component.component';
+import { RegisterComponentComponent } from './modules/auth/register-component/register-component.component';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { StartComponentComponent } from './modules/start/start-component/start-c
     AppComponent,
     LoginComponentComponent,
     MfaVerificationComponent,
-    StartComponentComponent
+    StartComponentComponent,
+    RegisterComponentComponent
   ],
   imports: [
     BrowserModule,

@@ -71,7 +71,6 @@ body {
   border-radius: 4px;
   font-weight: bold;
   cursor: pointer;
-  margin-top: 1rem;
   font-family: "BROmega", sans-serif;
 }
 
@@ -108,4 +107,76 @@ body {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+.forgot-password {
+  text-align: right;
+  margin-top: 1rem;
+}
+
+.forgot-password a {
+  color: #8937ee;
+  cursor: pointer;
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.forgot-password a:hover {
+  text-decoration: underline;
+}
+
+.recovery-instructions {
+  color: #adadad;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.recovery-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.textformat{
+  font-family: "BROmega", sans-serif;
+}
+
+.recovery-cancel-btn {
+  flex: 1;
+  padding: 0.75rem;
+  background: none;
+  border: 2px solid #8937ee;
+  color: #8937ee;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-family: "BROmega", sans-serif;
+}
+
+.recovery-cancel-btn:hover {
+  background: rgba(137, 55, 238, 0.1);
+}
+
+.recovery-submit-btn {
+  flex: 1;
+  padding: 0.75rem;
+  background-color: #8937ee;
+  color: black;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+  font-family: "BROmega", sans-serif;
+}
+
+.recovery-submit-btn:hover:not(:disabled) {
+  background-color: #8937ee;
+}
+
+.recovery-submit-btn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
 }
