@@ -1,1 +1,82 @@
-<p>register-component works!</p>
+<div class="register-container">
+    <div class="register-card">
+      <h2>Crear Cuenta</h2>
+      
+      <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstName">Primer Nombre</label>
+            <input type="text" id="firstName" class="textformat" [(ngModel)]="user.firstName" name="firstName" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="lastName">Apellido</label>
+            <input type="text" id="lastName" class="textformat" [(ngModel)]="user.lastName" name="lastName" required>
+          </div>
+        </div>
+  
+        <div class="form-row">
+          <div class="form-group">
+            <label for="birthDate">Fecha de Nacimiento</label>
+            <input type="date" id="birthDate" class="textformat" [(ngModel)]="user.birthDate" name="birthDate" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="country">País</label>
+            <select id="country" [(ngModel)]="user.country" class="textformat" name="country" (change)="onCountryChange()" required>
+              <option value="">Seleccione un país</option>
+              <option *ngFor="let country of countries" [value]="country.code">{{ country.name }}</option>
+            </select>
+          </div>
+        </div>
+  
+        <div class="form-row">
+          <div class="form-group">
+            <label for="city">Ciudad</label>
+            <select id="city" [(ngModel)]="user.city" class="textformat" name="city" [disabled]="!user.country" required>
+              <option value="">Seleccione una ciudad</option>
+              <option *ngFor="let city of filteredCities" [value]="city">{{ city }}</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="address">Dirección de Residencia</label>
+            <input type="text" id="address" class="textformat" [(ngModel)]="user.address" name="address" required>
+          </div>
+        </div>
+  
+        <div class="form-row">
+          <div class="form-group">
+            <label for="phone">Celular</label>
+            <input type="tel" id="phone" class="textformat" [(ngModel)]="user.phone" name="phone" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="postalCode">Código Postal</label>
+            <input type="text" id="postalCode" class="textformat" [(ngModel)]="user.postalCode" name="postalCode" required>
+          </div>
+        </div>
+  
+        <div class="form-row">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" class="textformat" [(ngModel)]="user.email" name="email" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="password">Contraseña</label>
+            <input type="password" id="password" [(ngModel)]="user.password" name="password" required>
+          </div>
+        </div>
+  
+        <button type="submit" class="register-button" [disabled]="registerForm.invalid || isLoading">
+          <span *ngIf="!isLoading">Registrarse</span>
+          <div *ngIf="isLoading" class="spinner"></div>
+        </button>
+      </form>
+      
+      <p class="login-link">
+        ¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión aquí</a>
+      </p>
+    </div>
+  </div>
