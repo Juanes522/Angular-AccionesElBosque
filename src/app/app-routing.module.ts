@@ -4,6 +4,7 @@ import { LoginComponentComponent } from './modules/auth/login-component/login-co
 import { MfaVerificationComponent } from './modules/auth/mfa-verification/mfa-verification.component';
 import { StartComponentComponent } from './modules/start/start-component/start-component.component';
 import { RegisterComponentComponent } from './modules/auth/register-component/register-component.component';
+import { PortfolioComponent } from './modules/dashboard/portfolio/portfolio.component';
 
 const routes: Routes = [
   {
@@ -20,7 +21,11 @@ const routes: Routes = [
   },
   {
     path: 'signup', component: RegisterComponentComponent
-  }
+  },
+  {
+    path: 'dashboard', component: PortfolioComponent
+  },
+
 ];
 
 @NgModule({
