@@ -1,0 +1,310 @@
+/* Colores principales */
+:root {
+  --primary-color: #8937ee;
+  --background-color: #121212;
+  --card-color: #1e1e1e;
+  --text-primary: #ffffff;
+  --text-secondary: #b3b3b3;
+  --up-color: #00da3c;
+  --up-border: #008F28;
+  --down-color: #ec0000;
+  --down-border: #8A0000;
+}
+
+.dashboard-container {
+  height: 100vh;
+  background-color: var(--background-color);
+  color: var(--text-primary);
+}
+
+.sidenav-container {
+  height: 100%;
+}
+
+.sidenav {
+  width: 250px;
+  background-color: var(--card-color);
+  border-right: 1px solid #333;
+}
+
+.sidebar-header {
+  padding: 16px;
+  border-bottom: 1px solid #333;
+}
+
+.sidebar-header h3 {
+  color: var(--primary-color);
+  margin: 0;
+}
+
+.mat-nav-list .mat-list-item {
+  color: var(--text-secondary);
+}
+
+.mat-nav-list .mat-list-item:hover {
+  background-color: #333;
+}
+
+.mat-nav-list .mat-list-item.mat-list-item-focus {
+  background-color: #333;
+}
+
+.content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.portfolio-main {
+  background-color: var(--card-color);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.portfolio-header h2 {
+  color: var(--primary-color);
+  margin-bottom: 8px;
+}
+
+.portfolio-value {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.amount {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.timestamp {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.search-chart-container {
+  margin-top: 20px;
+}
+
+.search-field {
+  width: 100%;
+  max-width: 400px;
+}
+
+.chart {
+  height: 500px;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.error-message {
+  color: var(--down-color);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+/* Estilos para el contenido del panel de trading */
+.trading-panel {
+  margin-top: 1rem;
+  margin-bottom: 3rem;
+}
+
+.trading-panel mat-card {
+  background-color: var(--card-color);
+}
+
+.trading-panel mat-card-header {
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0 0;
+  margin-bottom: 1rem;
+}
+
+.trading-panel mat-card-header button {
+  margin: 0 0.5rem;
+  color: var(--text-secondary);
+}
+
+.trading-panel mat-card-header button.active {
+  color: var(--primary-color);
+  border-bottom: 2px solid var(--primary-color);
+}
+
+.form-row {
+  margin-bottom: 1rem;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.market-price {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  padding-bottom: 2rem;
+  border-radius: 4px;
+}
+
+.market-price .price-value {
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+.buy-options {
+  margin: 1rem 0;
+  padding-bottom: 2rem;
+}
+
+.buy-options p {
+  margin-bottom: 0.5rem;
+  padding: 0.5rem 1rem;
+  color: var(--text-secondary);
+}
+
+.estimated-values {
+  padding: 1rem;
+  border-radius: 4px;
+}
+
+.estimated-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.estimated-row:last-child {
+  margin-bottom: 0;
+}
+
+.estimated-row .value {
+  font-weight: bold;
+}
+
+.submit-btn {
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.5rem;
+}
+
+.order-review {
+  padding: 1rem;
+}
+
+.order-review h3 {
+  color: var(--primary-color);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.review-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #333;
+}
+
+.review-row.total {
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-top: 1.5rem;
+  border-bottom: none;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+  gap: 1rem;
+}
+
+.action-buttons button {
+  flex: 1;
+  padding: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .trading-panel {
+    margin-top: 1rem;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .trading-panel mat-card-header button {
+    padding: 0 0.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .estimated-values, .market-price {
+    padding: 0.75rem;
+  }
+}
+
+.mat-card-header .mat-card-title {
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+}
+
+.buy-options {
+  margin: 16px 0;
+}
+
+.buy-options p {
+  margin-bottom: 8px;
+  color: var(--text-secondary);
+}
+
+.mat-radio-button {
+  margin-right: 16px;
+}
+
+.buy-button {
+  width: 100%;
+  margin-top: 16px;
+
+}
+
+@media (max-width: 959px) {
+  .sidenav {
+    width: 200px;
+  }
+  
+  .content {
+    padding: 10px;
+  }
+}
+
+@media (max-width: 599px) {
+  .sidenav {
+    width: 60px;
+  }
+  
+  .sidebar-header h3, 
+  .mat-list-item span {
+    display: none;
+  }
+  
+  .mat-list-item {
+    justify-content: center;
+  }
+  
+  .portfolio-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .amount {
+    font-size: 1.5rem;
+  }
+}
+

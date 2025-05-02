@@ -1,0 +1,362 @@
+import { Component, OnInit } from '@angular/core';
+import { EChartsOption } from 'echarts';
+import { MarketDataServiceService } from 'src/app/services/market-data-service.service';
+import * as echarts from 'echarts';
+
+@Component({
+  selector: 'app-portfolio',
+  templateUrl: './portfolio.component.html',
+  styleUrls: ['./portfolio.component.css']
+})
+export class PortfolioComponent implements OnInit {
+  
+  // Configuración del gráfico para la consulta de acciones por simbolo
+  chartOption: EChartsOption = {};
+  searchQuery: string = '';
+  selectedStock: any = null;
+  loading: boolean = false;
+  errorMessage: string | null = null;
+
+  // Panel de trading - compra
+  hideTradeTypeButtons: boolean = false;
+
+  tradeSymbol: string = '';
+  tradeAmount: number = 1;
+  tradeOrderType: string = 'market';
+  buyType: string = 'shares';
+  tradeType: 'buy' | 'sell' = 'buy';
+  marketPrice: number | null = 111.08;
+  dollarAmount: number = 100;
+  estimatedShares: number = 0;
+  showOrderReview: boolean = false;
+
+// Panel de portafolio, con el espacio para asignar el valor de la cuenta
+
+  portfolioValue: number = 100000.00;
+  lastUpdated: string = new Date().toLocaleString();
+
+  private upColor = '#00da3c';
+  private upBorderColor = '#008F28';
+  private downColor = '#ec0000';
+  private downBorderColor = '#8A0000';
+
+  constructor(private marketData: MarketDataServiceService) { }
+
+  ngOnInit() {
+    this.loadPortfolioChart('MSFT');
+    this.tradeType = 'buy';
+    this.buyType = 'shares';
+  }
+
+  loadPortfolioChart(symbol: string) {
+    this.loading = true;
+    this.errorMessage = null;
+
+    this.marketData.getStockData(symbol).subscribe({
+      next: (data) => {
+        if (!data) {
+          this.errorMessage = 'No se pudieron cargar los datos';
+          return;
+        }
+
+        this.setChartOptions(data);
+      },
+      error: (err) => {
+        this.errorMessage = 'Error al cargar los datos. Intente nuevamente.';
+        console.error(err);
+      },
+      complete: () => this.loading = false
+    });
+  }
+
+  setChartOptions(data: any) {
+    this.chartOption = {
+      backgroundColor: '#1e1e1e',
+      dataset: {
+        source: this.prepareChartData(data.prices)
+      },
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'line'
+        }
+      },
+      grid: [
+        {
+          left: '10%',
+          right: '10%',
+          bottom: 200
+        },
+        {
+          left: '10%',
+          right: '10%',
+          height: 80,
+          bottom: 80
+        }
+      ],
+      xAxis: [
+        {
+          type: 'category',
+          boundaryGap: false,
+          axisLine: { onZero: false, lineStyle: { color: '#555' } },
+          splitLine: { show: false },
+          axisLabel: { color: '#b3b3b3' },
+          min: 'dataMin',
+          max: 'dataMax'
+        },
+        {
+          type: 'category',
+          gridIndex: 1,
+          boundaryGap: false,
+          axisLine: { onZero: false },
+          axisTick: { show: false },
+          splitLine: { show: false },
+          axisLabel: { show: false },
+          min: 'dataMin',
+          max: 'dataMax'
+        }
+      ],
+      yAxis: [
+        {
+          scale: true,
+          splitArea: { show: true },
+          axisLine: { lineStyle: { color: '#555' } },
+          axisLabel: { color: '#b3b3b3' },
+          splitLine: { lineStyle: { color: '#333' } }
+        },
+        {
+          scale: true,
+          gridIndex: 1,
+          splitNumber: 2,
+          axisLabel: { show: false },
+          axisLine: { show: false },
+          axisTick: { show: false },
+          splitLine: { show: false }
+        }
+      ],
+      dataZoom: [
+        {
+          type: 'inside',
+          xAxisIndex: [0, 1],
+          start: 10,
+          end: 100
+        },
+        {
+          show: true,
+          xAxisIndex: [0, 1],
+          type: 'slider',
+          bottom: 10,
+          start: 10,
+          end: 100,
+          textStyle: { color: '#b3b3b3' },
+          handleStyle: {
+            color: '#8937ee'
+          }
+        }
+      ],
+      visualMap: {
+        show: false,
+        seriesIndex: 1,
+        dimension: 6,
+        pieces: [
+          { value: 1, color: this.upColor },
+          { value: -1, color: this.downColor }
+        ]
+      },
+      series: [
+        {
+          type: 'candlestick',
+          itemStyle: {
+            color: this.upColor,
+            color0: this.downColor,
+            borderColor: this.upBorderColor,
+            borderColor0: this.downBorderColor
+          },
+          encode: {
+            x: 0,
+            y: [1, 4, 3, 2]
+          }
+        },
+        {
+          name: 'Volumen',
+          type: 'bar',
+          xAxisIndex: 1,
+          yAxisIndex: 1,
+          itemStyle: {
+            color: '#7fbe9e'
+          },
+          large: true,
+          encode: {
+            x: 0,
+            y: 5
+          }
+        }
+      ]
+    };
+  }
+
+  prepareChartData(prices: any[]) {
+    return prices.map((price, index) => {
+      const sign = price.close >= price.open ? 1 : -1;
+      return [
+        price.date,
+        price.open,
+        price.high,
+        price.low,
+        price.close,
+        price.volume,
+        sign
+      ];
+    });
+  }
+
+  searchStock() {
+    if (this.searchQuery.trim()) {
+      this.loading = true;
+      this.errorMessage = null;
+
+      this.marketData.getStockData(this.searchQuery.trim()).subscribe({
+        next: (data) => {
+          if (!data) {
+            this.errorMessage = 'Acción no encontrada';
+            return;
+          }
+
+          this.selectedStock = {
+            symbol: data.symbol,
+            price: data.lastPrice,
+            lastRefreshed: data.lastRefreshed
+          };
+
+          this.tradeSymbol = data.symbol;
+          this.setChartOptions(data);
+        },
+        error: (err) => {
+          this.errorMessage = 'Error al buscar la acción';
+          console.error(err);
+        },
+        complete: () => this.loading = false
+      });
+    }
+  }
+
+  setTradeType(type: 'buy' | 'sell') {
+    this.tradeType = type;
+    this.calculateValues();
+  }
+  
+  loadMarketPrice() {
+    if (this.tradeSymbol) {
+      this.loading = true;
+      this.marketData.getStockData(this.tradeSymbol).subscribe({
+        next: (data) => {
+          if (data && data.lastPrice) {
+            this.marketPrice = data.lastPrice;
+            this.calculateValues();
+          }
+        },
+        error: (err) => {
+          console.error('Error loading market price:', err);
+        },
+        complete: () => this.loading = false
+      });
+    }
+  }
+  
+  onBuyTypeChange() {
+    this.tradeAmount = 1;
+    this.dollarAmount = 1;
+    this.estimatedShares = 1;
+    
+    if (this.marketPrice) {
+      if (this.buyType === 'dollars') {
+        this.estimatedShares = this.dollarAmount / this.marketPrice;
+      } else {
+        this.dollarAmount = this.tradeAmount * this.marketPrice;
+      }
+    }
+  }
+  
+  calculateValues() {
+    if (this.marketPrice) {
+      if (this.buyType === 'dollars') {
+        this.estimatedShares = this.dollarAmount / this.marketPrice;
+      } else {
+        this.dollarAmount = this.tradeAmount * this.marketPrice;
+      }
+    }
+  }
+
+  calculateDollarAmount() {
+    if (this.marketPrice && this.buyType === 'shares') {
+      this.dollarAmount = this.tradeAmount * this.marketPrice;
+    }
+  }
+  
+  calculateShareAmount() {
+    if (this.marketPrice && this.buyType === 'dollars') {
+      this.estimatedShares = this.dollarAmount / this.marketPrice;
+    }
+  }
+  
+  calculateTotal(): number {
+    if (!this.marketPrice) return 0;
+    
+    if (this.buyType === 'shares') {
+      return this.tradeAmount * this.marketPrice;
+    } else {
+      return this.dollarAmount;
+    }
+  }
+  
+  reviewOrder() {
+    if (!this.tradeSymbol) {
+      this.errorMessage = 'Por favor ingrese un símbolo válido';
+      return;
+    }
+    
+    if ((this.buyType === 'shares' && this.tradeAmount <= 0) || 
+        (this.buyType === 'dollars' && this.dollarAmount <= 0)) {
+      this.errorMessage = 'Por favor ingrese una cantidad válida';
+      return;
+    }
+    
+    if (!this.marketPrice) {
+      this.errorMessage = 'No se pudo obtener el precio de mercado';
+      return;
+    }
+    
+    this.errorMessage = null;
+    this.showOrderReview = true;
+    this.hideTradeTypeButtons = true;
+  }
+  
+  editOrder() {
+    this.showOrderReview = false;
+    this.hideTradeTypeButtons = false;
+  }
+  
+  confirmOrder() {
+    const orderDetails = {
+      type: this.tradeType,
+      symbol: this.tradeSymbol,
+      amount: this.buyType === 'shares' ? this.tradeAmount : this.estimatedShares,
+      total: this.calculateTotal(),
+      orderType: this.tradeOrderType,
+    };
+
+    this.showOrderReview = false;
+    this.hideTradeTypeButtons = false; 
+   // this.resetForm();
+  }
+
+  /*
+  resetForm() {
+    this.tradeSymbol = '';
+    this.tradeAmount = 1;
+    this.dollarAmount = 100;
+    this.marketPrice = null;
+    this.estimatedShares = 0;
+  }
+    */
+}
