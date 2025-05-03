@@ -30,6 +30,9 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+
 
 @NgModule({
   declarations: [
@@ -50,6 +53,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     RouterModule.forRoot([]),
     NgxEchartsModule.forRoot({ echarts }),
     BrowserAnimationsModule,
+    ToastModule,
     MatSidenavModule,
     MatListModule,
     MatIconModule,
@@ -61,7 +65,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatButtonModule,
     MatProgressSpinnerModule
   ],
-  providers: [],
+  providers: [
+    MessageService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

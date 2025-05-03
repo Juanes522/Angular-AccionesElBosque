@@ -1,18 +1,22 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
+import { MessageService } from 'primeng/api'
 import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthServiceService {
-  constructor(private http: HttpClient) { }
 
-   verifyMFA(code: string): Observable<any> {
-    return this.http.post<any>('/api/auth/verify-mfa', { code });
+  private API_SERVER = "http://localhost:8080/user/create"
+
+  constructor(
+    private http: HttpClient,
+    private messageService: MessageService
+  ) { }
+
+  registerUser(userData: any): Observable<any> {
+    return this.http.post(this.API_SERVER, userData);
   }
 
-  resendMFA(): Observable<any> {
-    return this.http.post<any>('/api/auth/resend-mfa', {});
-  }
 }
