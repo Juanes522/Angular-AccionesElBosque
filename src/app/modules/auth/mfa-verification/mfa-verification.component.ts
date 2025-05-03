@@ -52,12 +52,4 @@ export class MfaVerificationComponent {
       this.router.navigate(['/dashboard']);
     }, 1000);
   }
-/*
-  resendCode(): void {
-    this.authService.resendMFA().subscribe({
-      next: () => alert('Nuevo código enviado.'),
-      error: () => alert('Error al reenviar el código.')
-    });
-  }
-    */
 }
