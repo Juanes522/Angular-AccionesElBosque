@@ -33,28 +33,29 @@ export class RegisterComponentComponent {
     });
   }
 
-  onSubmit(){
-
+  onSubmit() {
     if (this.registerForm.valid) {
+      this.isLoading = true;
+      console.log("Enviando datos al servidor...", this.registerForm.value); // Log de datos enviados
+  
       this.authService.registerUser(this.registerForm.value).subscribe({
         next: (response) => {
+          this.isLoading = false;
+          console.log("✅ Registro exitoso - Respuesta del servidor:", response); // Log de éxito
           this.showSuccess('Registro exitoso', 'Usuario registrado correctamente');
           this.registerForm.reset();
           this.registerForm.patchValue({ country: 'Colombia' });
         },
         error: (err) => {
+          this.isLoading = false;
+          console.error("❌ Error en el registro - Detalles:", err); // Log de error
           this.showError('Error en registro', err.error?.message || 'Ocurrió un error al registrar');
         }
       });
     } else {
+      console.warn("⚠ Formulario inválido - Campos faltantes o incorrectos"); // Log de formulario inválido
       this.showWarn('Formulario inválido', 'Por favor complete todos los campos requeridos');
     }
-
-    this.isLoading = true;
-    setTimeout(() => {
-      this.isLoading = false;
-      alert('Registro exitoso');
-    }, 1500);
   }
 
   private showSuccess(summary: string, detail: string) {
