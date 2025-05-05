@@ -118,3 +118,13 @@
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
   }
+
+  .section-title {
+    color: white;
+    text-align: left;
+    margin: 2rem 0 1rem 0;
+    font-family: "BROmega", sans-serif;
+    font-size: 1.2rem;
+    border-bottom: 1px solid #444;
+    padding-bottom: 0.5rem;
+  }

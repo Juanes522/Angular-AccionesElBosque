@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { MessageService } from 'primeng/api'
 import { Observable } from 'rxjs';
 
@@ -9,12 +9,21 @@ import { Observable } from 'rxjs';
 export class AuthServiceService {
 
   private API_SERVER = "http://localhost:8080/alpaca/accounts/create"
-  
 
+  private API_SERVER_LOGIN = "http://localhost:8080/user/check"
+  
   constructor(
     private http: HttpClient,
     private messageService: MessageService
   ) { }
+
+  login(credentiasl: {email: string, password: string}): Observable<any> {
+    const params = new HttpParams()
+    .set('email',credentiasl.email)
+    .set('password',credentiasl.password);
+
+    return this.http.get(this.API_SERVER_LOGIN, {params});
+  }
 
   registerUser(formData: any): Observable<any> {
      const userData = {
@@ -35,13 +44,13 @@ export class AuthServiceService {
         "country_of_citizenship": "COL",
         "country_of_birth": "COL",
         "country_of_tax_residence": "COL",
-        "funding_source": ["employment_income"],
-        "annual_income_min": "10000",
-        "annual_income_max": "10000",
-        "total_net_worth_min": "10000",
-        "total_net_worth_max": "10000",
-        "liquid_net_worth_min": "10000",
-        "liquid_net_worth_max": "10000",
+        "funding_source": [formData.funding_source],
+        "annual_income_min": formData.annual_income_min,
+        "annual_income_max": formData.annual_income_max,
+        "total_net_worth_min": formData.total_net_worth_min,
+        "total_net_worth_max": formData.total_net_worth_max,
+        "liquid_net_worth_min": formData.liquid_net_worth_min,
+        "liquid_net_worth_max": formData.liquid_net_worth_max,
         "liquidity_needs": "does_not_matter",
         "investment_experience_with_stocks": "over_5_years",
         "investment_experience_with_options": "over_5_years",

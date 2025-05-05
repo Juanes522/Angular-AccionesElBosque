@@ -11,12 +11,13 @@
   --down-border: #8A0000;
 }
 
+/*Contenedor general del dashboard/portafolio*/
 .dashboard-container {
   height: 100vh;
   background-color: var(--background-color);
   color: var(--text-primary);
 }
-
+/*Estilos para barra lateral*/
 .sidenav-container {
   height: 100%;
 }
@@ -56,6 +57,7 @@
   gap: 20px;
 }
 
+/*Estilos para el espacio de la grafica de acciones, junto con campo de busqueda*/
 .portfolio-main {
   background-color: var(--card-color);
   border-radius: 8px;
@@ -110,7 +112,7 @@
 /* Estilos para el contenido del panel de trading */
 .trading-panel {
   margin-top: 1rem;
-  margin-bottom: 3rem;
+  margin-bottom: 1rem;
 }
 
 .trading-panel mat-card {
@@ -229,27 +231,6 @@
   padding: 0.5rem;
 }
 
-@media (max-width: 768px) {
-  .trading-panel {
-    margin-top: 1rem;
-  }
-  
-  .action-buttons {
-    flex-direction: column;
-  }
-}
-
-@media (max-width: 480px) {
-  .trading-panel mat-card-header button {
-    padding: 0 0.5rem;
-    font-size: 0.9rem;
-  }
-  
-  .estimated-values, .market-price {
-    padding: 0.75rem;
-  }
-}
-
 .mat-card-header .mat-card-title {
   color: var(--primary-color);
   margin-bottom: 1rem;
@@ -272,6 +253,27 @@
   width: 100%;
   margin-top: 16px;
 
+}
+
+@media (max-width: 768px) {
+  .trading-panel {
+    margin-top: 1rem;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .trading-panel mat-card-header button {
+    padding: 0 0.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .estimated-values, .market-price {
+    padding: 0.75rem;
+  }
 }
 
 @media (max-width: 959px) {

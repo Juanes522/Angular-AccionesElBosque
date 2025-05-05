@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { EChartsOption } from 'echarts';
 import { MarketDataServiceService } from 'src/app/services/market-data-service.service';
+import { TradingServiceService } from 'src/app/services/trading-service.service';
+import { MessageService } from 'primeng/api';
 import * as echarts from 'echarts';
+
 
 @Component({
   selector: 'app-portfolio',
@@ -10,44 +13,59 @@ import * as echarts from 'echarts';
 })
 export class PortfolioComponent implements OnInit {
   
-  // Configuración del gráfico para la consulta de acciones por simbolo
+// nico aqui te dejo la ip que me pasaste  
+  accountId: string = '47a6e263-3a28-41ec-8610-717bd1aaa49c';
+
+// Configuración del gráfico para la consulta de acciones por simbolo
   chartOption: EChartsOption = {};
   searchQuery: string = '';
   selectedStock: any = null;
   loading: boolean = false;
   errorMessage: string | null = null;
 
-  // Panel de trading - compra
+// Panel de trading - compra
   hideTradeTypeButtons: boolean = false;
+  userId: string = '';
 
   tradeSymbol: string = '';
   tradeAmount: number = 1;
   tradeOrderType: string = 'market';
+  tradeTime: string = 'day';
   buyType: string = 'shares';
   tradeType: 'buy' | 'sell' = 'buy';
-  marketPrice: number | null = 111.08;
+  marketPrice: number | null = 205.11;
   dollarAmount: number = 100;
   estimatedShares: number = 0;
   showOrderReview: boolean = false;
 
-// Panel de portafolio, con el espacio para asignar el valor de la cuenta
+// Panel de portafolio, con el espacio para asignar el valor de la cuenta, cuando se obtenga del servicio.
 
   portfolioValue: number = 100000.00;
   lastUpdated: string = new Date().toLocaleString();
 
+
+// Colores para candlestick respecto al rendimiento de las acciones
   private upColor = '#00da3c';
   private upBorderColor = '#008F28';
   private downColor = '#ec0000';
   private downBorderColor = '#8A0000';
 
-  constructor(private marketData: MarketDataServiceService) { }
+  constructor(
+    private marketData: MarketDataServiceService,
+    private tradingService: TradingServiceService,
+    private messageService: MessageService
+  ) { }
 
+
+// Arranque con la representación de microsoft para test inicial, 
+// se puede quitar para no gastar intentos
   ngOnInit() {
     this.loadPortfolioChart('MSFT');
     this.tradeType = 'buy';
     this.buyType = 'shares';
   }
 
+// Carga de datos al grafico
   loadPortfolioChart(symbol: string) {
     this.loading = true;
     this.errorMessage = null;
@@ -69,6 +87,7 @@ export class PortfolioComponent implements OnInit {
     });
   }
 
+// Configuración inicial de la grafica para las acciones
   setChartOptions(data: any) {
     this.chartOption = {
       backgroundColor: '#1e1e1e',
@@ -210,6 +229,7 @@ export class PortfolioComponent implements OnInit {
     });
   }
 
+// Consulta para busqueda de las acciones. 
   searchStock() {
     if (this.searchQuery.trim()) {
       this.loading = true;
@@ -245,6 +265,7 @@ export class PortfolioComponent implements OnInit {
     this.calculateValues();
   }
   
+// Metodo para cargar precio del mercado por acción
   loadMarketPrice() {
     if (this.tradeSymbol) {
       this.loading = true;
@@ -277,6 +298,7 @@ export class PortfolioComponent implements OnInit {
     }
   }
   
+// Calculo para carga del precio actual del mercado
   calculateValues() {
     if (this.marketPrice) {
       if (this.buyType === 'dollars') {
@@ -287,18 +309,21 @@ export class PortfolioComponent implements OnInit {
     }
   }
 
+// Calculo para cantidad de dolares
   calculateDollarAmount() {
     if (this.marketPrice && this.buyType === 'shares') {
       this.dollarAmount = this.tradeAmount * this.marketPrice;
     }
   }
   
+// Calculo para cantidad de acciones
   calculateShareAmount() {
     if (this.marketPrice && this.buyType === 'dollars') {
       this.estimatedShares = this.dollarAmount / this.marketPrice;
     }
   }
   
+// Calculo para cantidad de acciones o dolares, segun opción seleccionada
   calculateTotal(): number {
     if (!this.marketPrice) return 0;
     
@@ -309,6 +334,7 @@ export class PortfolioComponent implements OnInit {
     }
   }
   
+// Revisión de los parametros de orden
   reviewOrder() {
     if (!this.tradeSymbol) {
       this.errorMessage = 'Por favor ingrese un símbolo válido';
@@ -331,32 +357,68 @@ export class PortfolioComponent implements OnInit {
     this.hideTradeTypeButtons = true;
   }
   
+// Edición de la orden
   editOrder() {
     this.showOrderReview = false;
     this.hideTradeTypeButtons = false;
   }
   
+
+// --- Logica para el envio de ordenezs ---
+
+
+
+// Confirmación de la orden, descomentarear cuando se integre con el servicio ☺
   confirmOrder() {
-    const orderDetails = {
-      type: this.tradeType,
+
+    const orderData = {
       symbol: this.tradeSymbol,
-      amount: this.buyType === 'shares' ? this.tradeAmount : this.estimatedShares,
-      total: this.calculateTotal(),
-      orderType: this.tradeOrderType,
+      qty: this.buyType === 'shares' ? this.tradeAmount : this.estimatedShares,
+      side: this.tradeType,
+      type: 'market',
+      time_in_force: 'day'
     };
 
-    this.showOrderReview = false;
-    this.hideTradeTypeButtons = false; 
-   // this.resetForm();
+    this.tradingService.placeOrder(this.accountId, orderData).subscribe({
+      next: (response) => {
+        this.showSuccess('Orden ejecutada', 'La orden se ha completado exitosamente');
+        this.resetAfterOrder();
+      },
+      error: (err) => {
+        this.showError('Error en la orden', err.error?.message || 'Ocurrió un error al procesar la orden');
+      }
+    });
+  
+    this.resetAfterOrder();
   }
 
-  /*
-  resetForm() {
+  private resetAfterOrder() {
+    this.showOrderReview = false;
+    this.hideTradeTypeButtons = false;
     this.tradeSymbol = '';
     this.tradeAmount = 1;
     this.dollarAmount = 100;
     this.marketPrice = null;
     this.estimatedShares = 0;
   }
-    */
+
+// mensajes de estado
+  private showSuccess(summary: string, detail: string) {
+    this.messageService.add({
+      severity: 'success',
+      summary,
+      detail,
+      life: 5000
+    });
+  }
+
+  private showError(summary: string, detail: string) {
+    this.messageService.add({
+      severity: 'error',
+      summary,
+      detail,
+      life: 5000
+    });
+  }
+  
 }
