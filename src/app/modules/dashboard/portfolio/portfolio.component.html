@@ -81,7 +81,7 @@
             <div class="form-row">
               <mat-form-field appearance="outline" class="full-width" *ngIf="buyType === 'shares'">
                 <mat-label>{{tradeType === 'buy' ? 'Cantidad' : 'Cantidad a vender'}}</mat-label>
-                <input matInput type="number" [(ngModel)]="tradeAmount" min="1" (input)="calculateDollarAmount()">
+                <input matInput type="number" [(ngModel)]="tradeAmount" min="0.0001" (input)="calculateDollarAmount()">
               </mat-form-field>
             
               <mat-form-field appearance="outline" class="full-width" *ngIf="buyType === 'dollars'">
@@ -151,12 +151,23 @@
                 </mat-select>
               </mat-form-field>
             </div>
-      
+
+            <!-- Order Time -->
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Vigencia de la orden</mat-label>
+                <mat-select [(ngModel)]="tradeTime" disabled>
+                  <mat-option value="day">Day</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
             <button mat-raised-button color="primary" class="submit-btn" (click)="reviewOrder()">
               Revisar Orden
             </button>
           </mat-card-content>
       
+
           <!-- Order Review Section -->
           <mat-card-content *ngIf="showOrderReview" class="order-review">
             <h3>Resumen de la Orden</h3>
@@ -196,6 +207,11 @@
               <span>Market</span>
             </div>
             
+            <div class="review-row">
+              <span>Vigencia de la orden:</span>
+              <span>Day</span>
+            </div>
+
             <div class="review-row total">
               <span>{{tradeType === 'buy' ? 'Total estimado' : 'Valor estimado'}}:</span>
               <span>{{calculateTotal() | currency:'USD':'symbol':'1.2-2'}}</span>
@@ -212,3 +228,4 @@
     </mat-sidenav-content>
   </mat-sidenav-container>
 </div>
+<p-toast></p-toast>

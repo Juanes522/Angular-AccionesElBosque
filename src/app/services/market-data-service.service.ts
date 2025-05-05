@@ -7,8 +7,9 @@ import { map, catchError } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class MarketDataServiceService {
-  private apiUrl = 'https://www.alphavantage.co/query';
+  private apiUrl = '';
   private apiKey = '';
+ // https://www.alphavantage.co/query
  // 1RME20UV9TP1TAX9
  // VQW70RZXW210VPZD
  // J8WWUN1UFX3PCIAV

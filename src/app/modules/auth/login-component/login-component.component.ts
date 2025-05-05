@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { Form, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthServiceService } from 'src/app/services/auth-service.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-login-component',
@@ -8,29 +11,63 @@ import { Router } from '@angular/router';
 })
 
 export class LoginComponentComponent {
-  email: string = '';
-  password: string = '';
-  recoveryEmail: string = '';
   isLoading: boolean = false;
+
+  loginForm: FormGroup;
+
+  recoveryEmail: string = '';
   showRecovery: boolean = false;
 
   constructor(
-    private router: Router
-  ){}
+    private router: Router,
+    private fb: FormBuilder,
+    private authService: AuthServiceService,
+    private messageService: MessageService
+  ){
+    this.loginForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required]
+    });
+  }
 
   toggleRecovery(){
     this.showRecovery = !this.showRecovery;
   }
-
+  
   onSubmit() {
-    this.isLoading = true;
+    if (this.loginForm.valid) {
+      this.isLoading = true;
+      
+      this.authService.login(this.loginForm.value).subscribe({
+        next: (response) => {
+          this.isLoading = false;
+          this.showSuccess('Bienvenido', 'Inicio de sesión exitoso');
+          this.router.navigate(['/dashboard']);
+        },
+        error: (err) => {
+          this.isLoading = false;
+          this.showError('Error', err.error?.message || 'Credenciales inválidas');
+        }
+      });
+    }
+  }
 
-    console.log('Credenciales ingresadas:', { email: this.email, password: this.password });
-    
-    setTimeout(() => {
-      this.router.navigate(['/mfa-verify']);
-      this.isLoading = false;
-    }, 1000);
+  private showSuccess(summary: string, detail: string) {
+    this.messageService.add({
+      severity: 'success',
+      summary,
+      detail,
+      life: 5000
+    });
+  }
+
+  private showError(summary: string, detail: string) {
+    this.messageService.add({
+      severity: 'error',
+      summary,
+      detail,
+      life: 5000
+    });
   }
 
   onRecoverySubmit(){
