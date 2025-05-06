@@ -8,10 +8,10 @@ import { Observable } from 'rxjs';
 })
 export class AuthServiceService {
 
-  private API_SERVER = "http://localhost:8080/alpaca/accounts/create"
+  private API_SERVER = "http://localhost:8085/alpaca/accounts/create"
 
-  private API_SERVER_LOGIN = "http://localhost:8080/user/check"
-  
+  private API_SERVER_LOGIN = "http://localhost:8085/user/check"
+
   constructor(
     private http: HttpClient,
     private messageService: MessageService
@@ -92,10 +92,11 @@ export class AuthServiceService {
         "family_name": "wyz",
         "email_address": ""
       },
-      "additional_information": "",
-      "account_type": ""
+      "password" : formData.password,
+      "idCommission" : 0
+
     };
-  
+
     console.log('Datos completos a enviar:', JSON.stringify(userData, null, 2));
     return this.http.post(this.API_SERVER, userData);
   }

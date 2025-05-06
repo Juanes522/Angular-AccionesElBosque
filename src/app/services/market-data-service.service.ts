@@ -7,8 +7,8 @@ import { map, catchError } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class MarketDataServiceService {
-  private apiUrl = '';
-  private apiKey = '';
+  private apiUrl = 'https://www.alphavantage.co/query';
+  private apiKey = '1RME20UV9TP1TAX9';
  // https://www.alphavantage.co/query
  // 1RME20UV9TP1TAX9
  // VQW70RZXW210VPZD
@@ -32,12 +32,12 @@ export class MarketDataServiceService {
       })
     );
   }
-  
+
   private transformDataForChart(data: any) {
     if (!data['Time Series (Daily)']) {
       throw new Error('Datos no disponibles');
     }
-  
+
     const series = data['Time Series (Daily)'];
     const dates = Object.keys(series).sort().slice(-90); // Últimos 90 días
     const prices = dates.map(date => {
@@ -51,7 +51,7 @@ export class MarketDataServiceService {
         volume: parseInt(dailyData['5. volume'])
       };
     });
-  
+
     return {
       symbol: data['Meta Data']['2. Symbol'],
       lastRefreshed: data['Meta Data']['3. Last Refreshed'],

@@ -12,9 +12,9 @@ import * as echarts from 'echarts';
   styleUrls: ['./portfolio.component.css']
 })
 export class PortfolioComponent implements OnInit {
-  
-// nico aqui te dejo la ip que me pasaste  
-  accountId: string = '47a6e263-3a28-41ec-8610-717bd1aaa49c';
+
+// nico aqui te dejo la ip que me pasaste
+  accountId: string = '4deb9fcd-83fb-4045-908e-04c504d5e50d';
 
 // Configuración del gráfico para la consulta de acciones por simbolo
   chartOption: EChartsOption = {};
@@ -57,7 +57,7 @@ export class PortfolioComponent implements OnInit {
   ) { }
 
 
-// Arranque con la representación de microsoft para test inicial, 
+// Arranque con la representación de microsoft para test inicial,
 // se puede quitar para no gastar intentos
   ngOnInit() {
     this.loadPortfolioChart('MSFT');
@@ -229,7 +229,7 @@ export class PortfolioComponent implements OnInit {
     });
   }
 
-// Consulta para busqueda de las acciones. 
+// Consulta para busqueda de las acciones.
   searchStock() {
     if (this.searchQuery.trim()) {
       this.loading = true;
@@ -264,7 +264,7 @@ export class PortfolioComponent implements OnInit {
     this.tradeType = type;
     this.calculateValues();
   }
-  
+
 // Metodo para cargar precio del mercado por acción
   loadMarketPrice() {
     if (this.tradeSymbol) {
@@ -283,12 +283,12 @@ export class PortfolioComponent implements OnInit {
       });
     }
   }
-  
+
   onBuyTypeChange() {
     this.tradeAmount = 1;
     this.dollarAmount = 1;
     this.estimatedShares = 1;
-    
+
     if (this.marketPrice) {
       if (this.buyType === 'dollars') {
         this.estimatedShares = this.dollarAmount / this.marketPrice;
@@ -297,7 +297,7 @@ export class PortfolioComponent implements OnInit {
       }
     }
   }
-  
+
 // Calculo para carga del precio actual del mercado
   calculateValues() {
     if (this.marketPrice) {
@@ -315,54 +315,54 @@ export class PortfolioComponent implements OnInit {
       this.dollarAmount = this.tradeAmount * this.marketPrice;
     }
   }
-  
+
 // Calculo para cantidad de acciones
   calculateShareAmount() {
     if (this.marketPrice && this.buyType === 'dollars') {
       this.estimatedShares = this.dollarAmount / this.marketPrice;
     }
   }
-  
+
 // Calculo para cantidad de acciones o dolares, segun opción seleccionada
   calculateTotal(): number {
     if (!this.marketPrice) return 0;
-    
+
     if (this.buyType === 'shares') {
       return this.tradeAmount * this.marketPrice;
     } else {
       return this.dollarAmount;
     }
   }
-  
+
 // Revisión de los parametros de orden
   reviewOrder() {
     if (!this.tradeSymbol) {
       this.errorMessage = 'Por favor ingrese un símbolo válido';
       return;
     }
-    
-    if ((this.buyType === 'shares' && this.tradeAmount <= 0) || 
+
+    if ((this.buyType === 'shares' && this.tradeAmount <= 0) ||
         (this.buyType === 'dollars' && this.dollarAmount <= 0)) {
       this.errorMessage = 'Por favor ingrese una cantidad válida';
       return;
     }
-    
+
     if (!this.marketPrice) {
       this.errorMessage = 'No se pudo obtener el precio de mercado';
       return;
     }
-    
+
     this.errorMessage = null;
     this.showOrderReview = true;
     this.hideTradeTypeButtons = true;
   }
-  
+
 // Edición de la orden
   editOrder() {
     this.showOrderReview = false;
     this.hideTradeTypeButtons = false;
   }
-  
+
 
 // --- Logica para el envio de ordenezs ---
 
@@ -388,7 +388,7 @@ export class PortfolioComponent implements OnInit {
         this.showError('Error en la orden', err.error?.message || 'Ocurrió un error al procesar la orden');
       }
     });
-  
+
     this.resetAfterOrder();
   }
 
@@ -420,5 +420,5 @@ export class PortfolioComponent implements OnInit {
       life: 5000
     });
   }
-  
+
 }
