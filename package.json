@@ -21,6 +21,7 @@
     "@angular/platform-browser-dynamic": "^16.2.0",
     "@angular/router": "^16.2.0",
     "@types/echarts": "^5.0.0",
+    "angular-acciones-el-bosque": "file:",
     "apexcharts": "^4.7.0",
     "echarts": "^5.6.0",
     "ngx-apexcharts": "^0.7.1",

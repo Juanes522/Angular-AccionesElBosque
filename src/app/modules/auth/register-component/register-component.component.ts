@@ -16,7 +16,7 @@ interface SelectOption {
 })
 export class RegisterComponentComponent {
   isLoading = false;
-  
+
   employmentStatuses: SelectOption[] = [
     { display: 'Empleado', value: 'employed' },
     { display: 'Desempleado', value: 'unemployed' },
@@ -70,7 +70,7 @@ export class RegisterComponentComponent {
   onSubmit() {
     if (this.registerForm.valid) {
       this.isLoading = true;
-  
+
       const formData = {
         ...this.registerForm.value,
         annual_income_min: this.getMinValue(this.registerForm.value.annualIncome),
@@ -79,11 +79,11 @@ export class RegisterComponentComponent {
         total_net_worth_max: this.getMaxValue(this.registerForm.value.netWorth),
         liquid_net_worth_min: this.getMinValue(this.registerForm.value.investableAssets),
         liquid_net_worth_max: this.getMaxValue(this.registerForm.value.investableAssets),
-        funding_source: [this.registerForm.value.fundingSource]
+        funding_source: this.registerForm.value.fundingSource
       };
 
-
-      this.authService.registerUser(this.registerForm.value).subscribe({
+      // Usar formData en lugar de this.registerForm.value
+      this.authService.registerUser(formData).subscribe({
         next: (response) => {
           this.isLoading = false;
           this.showSuccess('Registro exitoso', 'Usuario registrado correctamente');
@@ -93,6 +93,7 @@ export class RegisterComponentComponent {
         error: (err) => {
           this.isLoading = false;
           this.showError('Error en registro', err.error?.message || 'Ocurrió un error al registrar');
+          console.log(this.registerForm.value); // Se corrigió el error de sintaxis
         }
       });
     } else {
@@ -109,8 +110,6 @@ export class RegisterComponentComponent {
     const parts = range.split('_');
     return parts[1] === 'plus' ? '10000000' : parts[1];
   }
-
-
 
   private showSuccess(summary: string, detail: string) {
     this.messageService.add({
