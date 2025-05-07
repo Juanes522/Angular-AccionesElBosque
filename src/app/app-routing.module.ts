@@ -25,6 +25,9 @@ const routes: Routes = [
   {
     path: 'dashboard', component: PortfolioComponent
   },
+  {
+    path: '**', redirectTo: 'acciones-ElBosque', pathMatch: 'full'
+  }
 
 ];
 

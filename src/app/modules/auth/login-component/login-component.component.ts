@@ -33,11 +33,11 @@ export class LoginComponentComponent {
   toggleRecovery(){
     this.showRecovery = !this.showRecovery;
   }
-  
+
   onSubmit() {
     if (this.loginForm.valid) {
       this.isLoading = true;
-      
+
       this.authService.login(this.loginForm.value).subscribe({
         next: (response) => {
           this.isLoading = false;
@@ -49,8 +49,10 @@ export class LoginComponentComponent {
           this.showError('Error', err.error?.message || 'Credenciales inválidas');
         }
       });
-    }
-  }
+    } else {
+      this.showError('Formulario inválido', 'Por favor introduzca un correo valido');
+    }
+  }
 
   private showSuccess(summary: string, detail: string) {
     this.messageService.add({

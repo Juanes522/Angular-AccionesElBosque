@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { MessageService } from 'primeng/api'
+import { MessageService } from 'primeng/api';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -8,21 +8,57 @@ import { Observable } from 'rxjs';
 })
 export class AuthServiceService {
 
-  private API_SERVER = "http://localhost:8085/alpaca/accounts/create"
 
-  private API_SERVER_LOGIN = "http://localhost:8085/user/check"
+
+  private API_SERVER = "http://localhost:8085/alpaca/accounts/create";
+  private API_SERVER_LOGIN = "http://localhost:8085/alpaca/check";
+  private API_SERVER_GET_ALPACA_ID = "http://localhost:8085/user/getalpacaid";
+  private currentAlpacaUserId: string | null = null;
 
   constructor(
     private http: HttpClient,
     private messageService: MessageService
   ) { }
 
-  login(credentiasl: {email: string, password: string}): Observable<any> {
-    const params = new HttpParams()
-    .set('email',credentiasl.email)
-    .set('password',credentiasl.password);
+  getCurrentAlpacaUserId(): string | null {
+    return this.currentAlpacaUserId;
+  }
+  // Método para obtener el alpacaUserId
+  private getAlpacaUserId(email: string): Observable<any> {
+    console.log('Obteniendo alpacaUserId para el email:', email);
+    return this.http.post(this.API_SERVER_GET_ALPACA_ID, { email });
+  }
 
-    return this.http.get(this.API_SERVER_LOGIN, {params});
+  login(credentials: {email: string, password: string}): Observable<any> {
+    const params = new HttpParams()
+      .set('email', credentials.email)
+      .set('password', credentials.password);
+
+    return new Observable(observer => {
+      this.http.get(this.API_SERVER_LOGIN, {params}).subscribe({
+        next: (loginResponse) => {
+          this.getAlpacaUserId(credentials.email).subscribe({
+            next: (alpacaIdResponse) => {
+              this.currentAlpacaUserId = alpacaIdResponse.alpacaUserId; // Almacena el ID
+              console.log('Alpaca User ID almacenado:', this.currentAlpacaUserId);
+
+              const combinedResponse = {
+                login: loginResponse,
+                alpacaUserId: this.currentAlpacaUserId
+              };
+              observer.next(combinedResponse);
+              observer.complete();
+            },
+            error: (alpacaError) => {
+              observer.error(alpacaError);
+            }
+          });
+        },
+        error: (loginError) => {
+          observer.error(loginError);
+        }
+      });
+    });
   }
 
   registerUser(formData: any): Observable<any> {

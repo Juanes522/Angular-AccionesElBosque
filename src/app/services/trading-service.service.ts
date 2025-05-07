@@ -16,7 +16,7 @@ interface OrderRequest {
 })
 export class TradingServiceService {
 
-  private API_SERVER_ORDER = "http://localhost:8081/alpaca/orders";
+  private API_SERVER_ORDER = "http://localhost:8085/alpaca/orders";
 
   constructor(
     private http: HttpClient,

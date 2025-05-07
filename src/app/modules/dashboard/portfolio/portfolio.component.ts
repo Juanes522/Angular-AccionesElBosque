@@ -4,6 +4,7 @@ import { MarketDataServiceService } from 'src/app/services/market-data-service.s
 import { TradingServiceService } from 'src/app/services/trading-service.service';
 import { MessageService } from 'primeng/api';
 import * as echarts from 'echarts';
+import { AuthServiceService } from 'src/app/services/auth-service.service';
 
 
 @Component({
@@ -14,7 +15,7 @@ import * as echarts from 'echarts';
 export class PortfolioComponent implements OnInit {
 
 // nico aqui te dejo la ip que me pasaste
-  accountId: string = '4deb9fcd-83fb-4045-908e-04c504d5e50d';
+  accountId: string = '';
 
 // Configuración del gráfico para la consulta de acciones por simbolo
   chartOption: EChartsOption = {};
@@ -51,6 +52,7 @@ export class PortfolioComponent implements OnInit {
   private downBorderColor = '#8A0000';
 
   constructor(
+    private authService: AuthServiceService,
     private marketData: MarketDataServiceService,
     private tradingService: TradingServiceService,
     private messageService: MessageService
@@ -59,11 +61,12 @@ export class PortfolioComponent implements OnInit {
 
 // Arranque con la representación de microsoft para test inicial,
 // se puede quitar para no gastar intentos
-  ngOnInit() {
-    this.loadPortfolioChart('MSFT');
-    this.tradeType = 'buy';
-    this.buyType = 'shares';
+ngOnInit(): void {
+  this.accountId = this.authService.getCurrentAlpacaUserId() || '';
+  if (!this.accountId) {
+    console.warn('No se encontró accountId (alpacaUserId) en el AuthService');
   }
+}
 
 // Carga de datos al grafico
   loadPortfolioChart(symbol: string) {
@@ -369,28 +372,36 @@ export class PortfolioComponent implements OnInit {
 
 
 // Confirmación de la orden, descomentarear cuando se integre con el servicio ☺
-  confirmOrder() {
-
-    const orderData = {
-      symbol: this.tradeSymbol,
-      qty: this.buyType === 'shares' ? this.tradeAmount : this.estimatedShares,
-      side: this.tradeType,
-      type: 'market',
-      time_in_force: 'day'
-    };
-
-    this.tradingService.placeOrder(this.accountId, orderData).subscribe({
-      next: (response) => {
-        this.showSuccess('Orden ejecutada', 'La orden se ha completado exitosamente');
-        this.resetAfterOrder();
-      },
-      error: (err) => {
-        this.showError('Error en la orden', err.error?.message || 'Ocurrió un error al procesar la orden');
-      }
-    });
-
-    this.resetAfterOrder();
+confirmOrder() {
+  if (!this.accountId) {
+    this.showError('Error', 'No se encontró el ID de la cuenta. Por favor inicie sesión nuevamente.');
+    return;
   }
+
+  const orderData = {
+    symbol: this.tradeSymbol,
+    qty: this.buyType === 'shares' ? this.tradeAmount : this.estimatedShares,
+    side: this.tradeType,
+    type: 'market',
+    time_in_force: 'day'
+  };
+
+  console.log('Datos a enviar:', JSON.stringify({
+    accountId: this.accountId,
+    orderData: orderData
+  }, null, 2));
+
+  this.tradingService.placeOrder(this.accountId, orderData).subscribe({
+    next: (response) => {
+      this.showSuccess('Orden ejecutada', 'La orden se ha completado exitosamente');
+      this.resetAfterOrder();
+    },
+    error: (err) => {
+      this.showError('Error en la orden', err.error?.message || 'Ocurrió un error al procesar la orden');
+    }
+  });
+}
+
 
   private resetAfterOrder() {
     this.showOrderReview = false;
