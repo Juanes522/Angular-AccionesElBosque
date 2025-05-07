@@ -5,6 +5,7 @@ import { TradingServiceService } from 'src/app/services/trading-service.service'
 import { MessageService } from 'primeng/api';
 import * as echarts from 'echarts';
 import { AuthServiceService } from 'src/app/services/auth-service.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -55,7 +56,8 @@ export class PortfolioComponent implements OnInit {
     private authService: AuthServiceService,
     private marketData: MarketDataServiceService,
     private tradingService: TradingServiceService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private router: Router
   ) { }
 
 
@@ -430,6 +432,11 @@ confirmOrder() {
       detail,
       life: 5000
     });
+  }
+
+  onLogout(): void{
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 
 }

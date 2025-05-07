@@ -5,6 +5,8 @@ import { MfaVerificationComponent } from './modules/auth/mfa-verification/mfa-ve
 import { StartComponentComponent } from './modules/start/start-component/start-component.component';
 import { RegisterComponentComponent } from './modules/auth/register-component/register-component.component';
 import { PortfolioComponent } from './modules/dashboard/portfolio/portfolio.component';
+import { AuthGuardService } from './services/auth-guard.service';
+
 
 const routes: Routes = [
   {
@@ -23,7 +25,8 @@ const routes: Routes = [
     path: 'signup', component: RegisterComponentComponent
   },
   {
-    path: 'dashboard', component: PortfolioComponent
+    path: 'dashboard', component: PortfolioComponent,
+    canActivate: [AuthGuardService]
   },
   {
     path: '**', redirectTo: 'acciones-ElBosque', pathMatch: 'full'

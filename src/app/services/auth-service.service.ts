@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -15,10 +16,16 @@ export class AuthServiceService {
   private API_SERVER_GET_ALPACA_ID = "http://localhost:8085/user/getalpacaid";
   private currentAlpacaUserId: string | null = null;
 
+  private authToken: string | null = null;
+  private tokenExpiration: Date | null = null;
+
   constructor(
     private http: HttpClient,
-    private messageService: MessageService
-  ) { }
+    private messageService: MessageService,
+    private router: Router
+  ) {
+    this.loadAuthData();
+   }
 
   getCurrentAlpacaUserId(): string | null {
     return this.currentAlpacaUserId;
@@ -41,6 +48,10 @@ export class AuthServiceService {
             next: (alpacaIdResponse) => {
               this.currentAlpacaUserId = alpacaIdResponse.alpacaUserId; // Almacena el ID
               console.log('Alpaca User ID almacenado:', this.currentAlpacaUserId);
+
+              const localToken = this.generateLocalToken();
+              this.authToken = localToken;
+              this.saveAuthData(localToken);
 
               const combinedResponse = {
                 login: loginResponse,
@@ -135,5 +146,45 @@ export class AuthServiceService {
 
     console.log('Datos completos a enviar:', JSON.stringify(userData, null, 2));
     return this.http.post(this.API_SERVER, userData);
+  }
+
+  private generateLocalToken(): string {
+    return 'local-token-' + Math.random().toString(36).substr(2) + Date.now().toString(36);
+  }
+
+  private saveAuthData(token: string): void {
+    const authData = {
+      token: token,
+      expiration: new Date(new Date().getTime() + 3600 * 1000)
+    };
+    localStorage.setItem('authData', JSON.stringify(authData));
+  }
+
+  private loadAuthData(): void {
+    const authData = localStorage.getItem('authData');
+    if (authData) {
+      const parsedData = JSON.parse(authData);
+      this.authToken = parsedData.token;
+      this.tokenExpiration = new Date(parsedData.expiration);
+
+      if (new Date() > this.tokenExpiration) {
+        this.clearAuth();
+      }
+    }
+  }
+
+  isAuthenticated(): boolean {
+    return !!this.authToken && (this.tokenExpiration ? new Date() < this.tokenExpiration : true);
+  }
+
+  clearAuth(): void {
+    this.authToken = null;
+    this.tokenExpiration = null;
+    localStorage.removeItem('authData');
+  }
+
+  logout(): void {
+    this.clearAuth();
+    this.router.navigate(['/login']);
   }
 }

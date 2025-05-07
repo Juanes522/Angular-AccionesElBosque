@@ -47,6 +47,7 @@ export class LoginComponentComponent {
         error: (err) => {
           this.isLoading = false;
           this.showError('Error', err.error?.message || 'Credenciales inválidas');
+          this.authService.clearAuth();
         }
       });
     } else {
