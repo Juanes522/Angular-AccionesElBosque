@@ -1,0 +1,113 @@
+<div class="fund-account-container">
+
+    <app-sidebar>
+        <mat-card class="fund-card">
+            <mat-card-header>
+                <mat-card-title>
+                    <h2>Fondear Cuenta</h2>
+                </mat-card-title>
+                <mat-card-subtitle *ngIf="step === 1">
+                    Primero necesitamos establecer una relación con tu cuenta bancaria
+                </mat-card-subtitle>
+                <mat-card-subtitle *ngIf="step === 2">
+                    Ahora puedes transferir fondos a tu cuenta
+                </mat-card-subtitle>
+            </mat-card-header>
+
+            <mat-card-content>
+                <!-- Crear relación ACH -->
+                <div *ngIf="step === 1" [formGroup]="relationshipForm" class="form-container">
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Nombre del titular de la cuenta</mat-label>
+                        <input matInput formControlName="account_owner_name" required>
+                        <mat-error *ngIf="relationshipForm.get('account_owner_name')?.hasError('required')">
+                            Este campo es requerido
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Tipo de cuenta bancaria</mat-label>
+                        <mat-select formControlName="bank_account_type" required>
+                            <mat-option value="CHECKING">Cuenta Corriente</mat-option>
+                            <mat-option value="SAVINGS">Cuenta de Ahorros</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Número de cuenta bancaria</mat-label>
+                        <input matInput formControlName="bank_account_number" required>
+                        <mat-error *ngIf="relationshipForm.get('bank_account_number')?.hasError('required')">
+                            Este campo es requerido
+                        </mat-error>
+                        <mat-error *ngIf="relationshipForm.get('bank_account_number')?.hasError('pattern')">
+                            Solo números y letras permitidos
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Número de ruta bancaria (9 dígitos)</mat-label>
+                        <input matInput formControlName="bank_routing_number" required maxlength="9">
+                        <mat-error *ngIf="relationshipForm.get('bank_routing_number')?.hasError('required')">
+                            Este campo es requerido
+                        </mat-error>
+                        <mat-error *ngIf="relationshipForm.get('bank_routing_number')?.hasError('pattern')">
+                            Debe tener exactamente 9 dígitos
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Nombre descriptivo (ej: Banco X)</mat-label>
+                        <input matInput formControlName="nickname" required>
+                        <mat-error *ngIf="relationshipForm.get('nickname')?.hasError('required')">
+                            Este campo es requerido
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Hacer transferencia -->
+                <div *ngIf="step === 2" [formGroup]="transferForm" class="form-container">
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Cantidad a transferir</mat-label>
+                        <input matInput type="number" formControlName="amount" required>
+
+                        <mat-error *ngIf="transferForm.get('amount')?.hasError('required')">
+                            Este campo es requerido
+                        </mat-error>
+                        <mat-error *ngIf="transferForm.get('amount')?.hasError('min')">
+                            El monto mínimo es $0.01
+                        </mat-error>
+                        <mat-error *ngIf="transferForm.get('amount')?.hasError('max')">
+                            El monto máximo es $100,000
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Dirección de transferencia</mat-label>
+                        <mat-select formControlName="direction" required>
+                            <mat-option value="INCOMING">Depositar fondos</mat-option>
+                            <mat-option value="OUTGOING">Retirar fondos</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </mat-card-content>
+
+            <mat-card-actions class="actions">
+                <button *ngIf="step === 2" mat-stroked-button class="back-button" (click)="step = 1">
+                    <mat-icon>arrow_back</mat-icon>
+                    Volver
+                </button>
+
+                <button *ngIf="step === 1" mat-raised-button color="primary" (click)="createRelationship()">Crear
+                    Relación Bancaria
+                </button>
+
+                <button *ngIf="step === 2" mat-raised-button color="primary" (click)="createTransfer()">Realizar
+                    Transferencia
+                </button>
+            </mat-card-actions>
+
+        </mat-card>
+    </app-sidebar>
+</div>
+
+<p-toast></p-toast>

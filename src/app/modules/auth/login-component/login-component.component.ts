@@ -13,6 +13,12 @@ import { MessageService } from 'primeng/api';
 export class LoginComponentComponent {
   isLoading: boolean = false;
 
+  hidePassword: boolean = true;
+
+  togglePasswordVisibility(): void {
+  this.hidePassword = !this.hidePassword;
+  }
+
   loginForm: FormGroup;
 
   recoveryEmail: string = '';

@@ -40,12 +40,6 @@ export class PortfolioComponent implements OnInit {
   estimatedShares: number = 0;
   showOrderReview: boolean = false;
 
-// Panel de portafolio, con el espacio para asignar el valor de la cuenta, cuando se obtenga del servicio.
-
-  portfolioValue: number = 100000.00;
-  lastUpdated: string = new Date().toLocaleString();
-
-
 // Colores para candlestick respecto al rendimiento de las acciones
   private upColor = '#00da3c';
   private upBorderColor = '#008F28';
@@ -369,7 +363,7 @@ ngOnInit(): void {
   }
 
 
-// --- Logica para el envio de ordenezs ---
+// --- Logica para el envio de ordenes ---
 
 
 

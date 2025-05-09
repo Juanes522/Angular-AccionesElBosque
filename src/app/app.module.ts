@@ -32,6 +32,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { SidebarComponent } from './modules/sidebar/sidebar.component';
+import { FundAccountComponent } from './modules/fund-account/fund-account.component';
 
 
 @NgModule({
@@ -42,6 +44,8 @@ import { ToastModule } from 'primeng/toast';
     StartComponentComponent,
     RegisterComponentComponent,
     PortfolioComponent,
+    SidebarComponent,
+    FundAccountComponent,
   ],
   imports: [
     BrowserModule,

@@ -128,3 +128,27 @@
     border-bottom: 1px solid #444;
     padding-bottom: 0.5rem;
   }
+
+  .password-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  
+  .toggle-password {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #666;
+  }
+  
+  .toggle-password:hover {
+    color: #333;
+  }
+  
+  input[type="password"], input[type="text"] {
+    padding-right: 40px;
+    width: 100%;
+  }
