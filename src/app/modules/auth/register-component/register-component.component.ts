@@ -17,6 +17,12 @@ interface SelectOption {
 export class RegisterComponentComponent {
   isLoading = false;
 
+  hidePassword: boolean = true;
+
+  togglePasswordVisibility(): void {
+  this.hidePassword = !this.hidePassword;
+  }
+
   employmentStatuses: SelectOption[] = [
     { display: 'Empleado', value: 'employed' },
     { display: 'Desempleado', value: 'unemployed' },

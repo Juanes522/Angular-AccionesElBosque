@@ -1,0 +1,85 @@
+  .fund-account-container {
+    height: 100vh;
+  }
+  
+  .fund-card {
+    width: 100%;
+    margin: 10px 0 10px 0; 
+    background-color: var(--card-color);
+    color: var(--text-primary);
+    
+    mat-card-header {
+      margin-bottom: 20px;
+      
+      mat-card-title h2 {
+        color: var(--primary-color);
+        margin: 20px;
+        font-size: 1.5rem;
+      }
+      
+      mat-card-subtitle {
+        color: var(--text-secondary);
+        font-size: 1rem;
+        margin: 20px;
+      }
+    }
+  }
+  
+  .form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 0 16px;
+  }
+  
+  .full-width {
+    width: 100%;
+    
+    .mat-form-field-infix {
+      width: 100%;
+    }
+  }
+  
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 16px;
+    
+    button {
+      min-width: 200px;
+      flex: 1;
+      
+      &.back-button {
+        background-color: transparent;
+        color: var(--text-secondary);
+        border: 1px solid var(--text-secondary);
+      }
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .fund-card {
+      margin: 10px 0;
+    }
+    
+    .actions {
+      flex-direction: row;
+      flex-wrap: wrap;
+      
+      button {
+        min-width: 100%;
+        flex: none;
+      }
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .actions {
+      flex-direction: column;
+      
+      button {
+        width: 100%;
+      }
+    }
+  }

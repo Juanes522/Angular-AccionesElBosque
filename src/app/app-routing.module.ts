@@ -6,6 +6,7 @@ import { StartComponentComponent } from './modules/start/start-component/start-c
 import { RegisterComponentComponent } from './modules/auth/register-component/register-component.component';
 import { PortfolioComponent } from './modules/dashboard/portfolio/portfolio.component';
 import { AuthGuardService } from './services/auth-guard.service';
+import { FundAccountComponent } from './modules/fund-account/fund-account.component';
 
 
 const routes: Routes = [
@@ -19,7 +20,8 @@ const routes: Routes = [
     path: 'login', component: LoginComponentComponent
   },
   {
-    path: 'mfa-verify', component: MfaVerificationComponent
+    path: 'mfa-verify', component: MfaVerificationComponent,
+    canActivate: [AuthGuardService]
   },
   {
     path: 'signup', component: RegisterComponentComponent
@@ -28,6 +30,13 @@ const routes: Routes = [
     path: 'dashboard', component: PortfolioComponent,
     canActivate: [AuthGuardService]
   },
+  {
+    path: 'fund-account', component: FundAccountComponent,
+    canActivate: [AuthGuardService]
+  },
+  /*{
+    path: 'profile',
+  },*/
   {
     path: '**', redirectTo: 'acciones-ElBosque', pathMatch: 'full'
   }
