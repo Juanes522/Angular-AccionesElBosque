@@ -27,9 +27,14 @@ export class AuthServiceService {
     this.loadAuthData();
    }
 
-  getCurrentAlpacaUserId(): string | null {
-    return this.currentAlpacaUserId;
+// In AuthServiceService
+getCurrentAlpacaUserId(): string {
+  if (!this.currentAlpacaUserId) {
+    console.warn('Requested AlpacaUserId but it was null');
+    // You might want to try loading from storage if you persist it
   }
+  return this.currentAlpacaUserId || '';
+}
   // Método para obtener el alpacaUserId
   private getAlpacaUserId(email: string): Observable<any> {
     console.log('Obteniendo alpacaUserId para el email:', email);

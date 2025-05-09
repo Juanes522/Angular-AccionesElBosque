@@ -57,12 +57,19 @@ export class PortfolioComponent implements OnInit {
 
 // Arranque con la representación de microsoft para test inicial,
 // se puede quitar para no gastar intentos
-ngOnInit(): void {
+// In FundAccountComponent
+ngOnInit() {
   this.accountId = this.authService.getCurrentAlpacaUserId() || '';
   if (!this.accountId) {
-    console.warn('No se encontró accountId (alpacaUserId) en el AuthService');
+    console.error('No Alpaca account ID found - user might not be logged in or account not created');
+    // You might want to redirect to login or show an error message
+    this.showError('Error', 'No se encontró la cuenta de Alpaca. Por favor inicie sesión nuevamente.');
+    return;
   }
+  console.log('Using Alpaca account ID:', this.accountId); // For debugging
 }
+
+// In your template, you might want to show a loading state or error if accountId is missing
 
 // Carga de datos al grafico
   loadPortfolioChart(symbol: string) {
