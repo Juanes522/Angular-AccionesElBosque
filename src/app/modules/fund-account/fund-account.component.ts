@@ -15,8 +15,6 @@ export class FundAccountComponent implements OnInit {
   step: number = 1; // 1: Crear relación, 2: Hacer transferencia
   relationshipId: string | null = null;
 
-  hasExistingRelationship: boolean = false;
-
   relationshipForm: FormGroup = this.fb.group({
     account_owner_name: ['', [Validators.required, Validators.maxLength(100)]],
     bank_account_type: ['CHECKING', [Validators.required]],
@@ -39,10 +37,11 @@ export class FundAccountComponent implements OnInit {
 
   ngOnInit() {
     this.accountId = this.authService.getCurrentAlpacaUserId() || '';
-    if (!this.accountId) {
+    if (this.accountId) {
+      this.checkExistingRelationship();
+    } else {
       console.warn('No se encontró accountId (alpacaUserId) en el AuthService');
     }
-    this.checkExistingRelationships();
   }
 
 /**
@@ -74,33 +73,20 @@ isValidRoutingNumber(routingNumber: string | number): boolean {
 
 
 // verificar la relacion ach
-checkExistingRelationships() {
-    if (this.accountId) {
-      this.achService.getAchRelationship(this.accountId).subscribe({
-        next: (relationships: any[]) => {
-          if (relationships && relationships.length > 0) {
-            this.hasExistingRelationship = true;
-            this.relationshipId = relationships[0].id;
-          }
-        },
-        error: (err) => {
-          console.error('Error al obtener relaciones:', err);
+checkExistingRelationship() {
+    this.achService.getAchRelationshipsId(this.accountId).subscribe({
+      next: (relationshipIds: string[]) => {
+        if (relationshipIds && relationshipIds.length > 0) {
+          this.relationshipId = relationshipIds[0]; // Tomamos el primer ID
+          this.step = 2; // Mostrar directamente el formulario de transferencia
         }
-      });
-    }
-  }
+      },
+      error: (err) => {
+        console.error('Error al verificar relación existente:', err);
+      }
+    });
+}
   
-  showFund() {
-    if (this.hasExistingRelationship) {
-      this.step = 2;
-    } else {
-      this.showError(
-        'Relación requerida', 
-        'Primero debe crear una relación bancaria para poder financiar su cuenta'
-      );
-    }
-  }
-
 
 
 createRelationship() {

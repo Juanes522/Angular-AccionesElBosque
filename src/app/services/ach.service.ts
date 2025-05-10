@@ -9,6 +9,7 @@ export class AchService {
 
   private API_SERVER_ACH_RELATION = "http://localhost:8085/alpaca/accounts/{account_id}/ach_relationships";
   private API_SERVER_ACH_TRANSFER = "http://localhost:8085/alpaca/accounts/{account_id}/transfers";
+  private API_SERVER_ACH_STATUS = "http://localhost:8085/alpaca/accounts/{account_id}/ach-relationships";
 
   constructor(
     private http: HttpClient
@@ -19,10 +20,9 @@ export class AchService {
     return this.http.post(url, data);
   }
 
-  
-  getAchRelationship(accountId: string): Observable<any> {
-    const url = this.API_SERVER_ACH_RELATION.replace('{account_id}', accountId);
-    return this.http.get<any[]>(url);
+  getAchRelationshipsId(accountId: string): Observable<string[]> {
+    const url = this.API_SERVER_ACH_STATUS.replace('{account_id}', accountId);
+    return this.http.get<string[]>(url);
   }
 
   createAchTransfer(accountId: string, data: any): Observable<any> {
