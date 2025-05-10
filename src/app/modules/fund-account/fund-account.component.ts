@@ -15,6 +15,8 @@ export class FundAccountComponent implements OnInit {
   step: number = 1; // 1: Crear relación, 2: Hacer transferencia
   relationshipId: string | null = null;
 
+  hasExistingRelationship: boolean = false;
+
   relationshipForm: FormGroup = this.fb.group({
     account_owner_name: ['', [Validators.required, Validators.maxLength(100)]],
     bank_account_type: ['CHECKING', [Validators.required]],
@@ -40,6 +42,7 @@ export class FundAccountComponent implements OnInit {
     if (!this.accountId) {
       console.warn('No se encontró accountId (alpacaUserId) en el AuthService');
     }
+    this.checkExistingRelationships();
   }
 
 /**
@@ -69,9 +72,36 @@ isValidRoutingNumber(routingNumber: string | number): boolean {
   return sum % 10 === 0;
 }
 
-showFund(){
 
-}
+// verificar la relacion ach
+checkExistingRelationships() {
+    if (this.accountId) {
+      this.achService.getAchRelationship(this.accountId).subscribe({
+        next: (relationships: any[]) => {
+          if (relationships && relationships.length > 0) {
+            this.hasExistingRelationship = true;
+            this.relationshipId = relationships[0].id;
+          }
+        },
+        error: (err) => {
+          console.error('Error al obtener relaciones:', err);
+        }
+      });
+    }
+  }
+  
+  showFund() {
+    if (this.hasExistingRelationship) {
+      this.step = 2;
+    } else {
+      this.showError(
+        'Relación requerida', 
+        'Primero debe crear una relación bancaria para poder financiar su cuenta'
+      );
+    }
+  }
+
+
 
 createRelationship() {
   if (this.relationshipForm.valid) {
