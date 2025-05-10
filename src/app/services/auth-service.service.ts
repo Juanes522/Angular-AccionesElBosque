@@ -37,9 +37,10 @@ getCurrentAlpacaUserId(): string {
 }
   // Método para obtener el alpacaUserId
   private getAlpacaUserId(email: string): Observable<any> {
-    console.log('Obteniendo alpacaUserId para el email:', email);
-    return this.http.post(this.API_SERVER_GET_ALPACA_ID, { email });
-  }
+  console.log('Obteniendo alpacaUserId para el email:', email);
+  const params = new HttpParams().set('email', email);
+  return this.http.get(this.API_SERVER_GET_ALPACA_ID, { params });
+}
 
   login(credentials: {email: string, password: string}): Observable<any> {
     const params = new HttpParams()
