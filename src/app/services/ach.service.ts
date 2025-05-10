@@ -19,6 +19,12 @@ export class AchService {
     return this.http.post(url, data);
   }
 
+  
+  getAchRelationship(accountId: string): Observable<any> {
+    const url = this.API_SERVER_ACH_RELATION.replace('{account_id}', accountId);
+    return this.http.get<any[]>(url);
+  }
+
   createAchTransfer(accountId: string, data: any): Observable<any> {
     const url = this.API_SERVER_ACH_TRANSFER.replace('{account_id}', accountId);
     return this.http.post(url, data);

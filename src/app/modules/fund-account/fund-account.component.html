@@ -103,15 +103,16 @@
           Volver
         </button>
 
-        <button *ngIf="step === 1" mat-raised-button color="primary" (click)="createRelationship()">Financiar Cuenta
+        <button *ngIf="step === 1" mat-raised-button color="primary" (click)="showFund()">
+          Financiar Cuenta
         </button>
 
-        <button *ngIf="step === 1" mat-raised-button color="primary" (click)="createRelationship()">Crear
-          Relación Bancaria
+        <button *ngIf="step === 1" mat-raised-button color="primary" (click)="createRelationship()">
+          Crear Relación Bancaria
         </button>
 
-        <button *ngIf="step === 2" mat-raised-button color="primary" (click)="createTransfer()">Realizar
-          Transferencia
+        <button *ngIf="step === 2" mat-raised-button color="primary" (click)="createTransfer()">
+          Realizar Transferencia
         </button>
       </mat-card-actions>
 
