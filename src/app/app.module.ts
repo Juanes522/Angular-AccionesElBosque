@@ -34,6 +34,8 @@ import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { SidebarComponent } from './modules/sidebar/sidebar.component';
 import { FundAccountComponent } from './modules/fund-account/fund-account.component';
+import { UserPortfolioComponent } from './modules/dashboard/user-portfolio/user-portfolio.component';
+import { SearchFieldComponent } from './modules/dashboard/search-field/search-field.component';
 
 
 @NgModule({
@@ -46,6 +48,8 @@ import { FundAccountComponent } from './modules/fund-account/fund-account.compon
     PortfolioComponent,
     SidebarComponent,
     FundAccountComponent,
+    SearchFieldComponent,
+    UserPortfolioComponent,
   ],
   imports: [
     BrowserModule,
