@@ -7,6 +7,7 @@ import { RegisterComponentComponent } from './modules/auth/register-component/re
 import { PortfolioComponent } from './modules/dashboard/portfolio/portfolio.component';
 import { AuthGuardService } from './services/auth-guard.service';
 import { FundAccountComponent } from './modules/fund-account/fund-account.component';
+import { UserPortfolioComponent } from './modules/dashboard/user-portfolio/user-portfolio.component';
 
 
 const routes: Routes = [
@@ -27,7 +28,11 @@ const routes: Routes = [
     path: 'signup', component: RegisterComponentComponent
   },
   {
-    path: 'dashboard', component: PortfolioComponent,
+    path: 'trading', component: PortfolioComponent,
+    canActivate: [AuthGuardService]
+  },
+  {
+    path: 'dashboard', component: UserPortfolioComponent,
     canActivate: [AuthGuardService]
   },
   {

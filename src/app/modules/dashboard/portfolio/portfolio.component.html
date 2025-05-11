@@ -1,22 +1,16 @@
 <div class="dashboard-container">
   <!-- Sidebar -->
   <app-sidebar>
-
+    <app-search-field></app-search-field>
     <!-- Portfolio -->
     <div class="main-content">
       <div class="portfolio-main">
         <div class="portfolio-header">
-          <h2>Portafolio</h2>
+          <h2>Portafolio/acciones</h2>
         </div>
 
         <div class="search-chart-container">
-          <mat-form-field appearance="outline" class="search-field">
-            <mat-label>Buscar símbolo (ej: AAPL)</mat-label>
-            <input matInput [(ngModel)]="searchQuery">
-            <button matSuffix mat-icon-button (click)="searchStock()">
-              <mat-icon>search</mat-icon>
-            </button>
-          </mat-form-field>
+          
 
           <div echarts [options]="chartOption" class="chart" *ngIf="!loading"></div>
           <mat-progress-spinner *ngIf="loading" mode="indeterminate" diameter="50"></mat-progress-spinner>

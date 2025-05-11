@@ -1,0 +1,211 @@
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <app-sidebar>
+        <app-search-field></app-search-field>
+        
+        <!-- Portfolio -->
+        <div class="main-content">
+            <div class="portfolio-main">
+                <div class="portfolio-header">
+                    <h2>Portafolio</h2>
+                </div>
+
+                <div class="search-chart-container">
+                    <!--
+          <div echarts [options]="chartOption" class="chart" *ngIf="!loading"></div>
+          <mat-progress-spinner *ngIf="loading" mode="indeterminate" diameter="50"></mat-progress-spinner>
+          
+          <div *ngIf="errorMessage" class="error-message">
+              <mat-icon>error</mat-icon>
+              {{errorMessage}}
+            </div>
+            -->
+                </div>
+            </div>
+
+            <!-- Trading Panel -->
+            <div class="trading-panel">
+                <mat-card>
+                    <mat-card-header *ngIf="!hideTradeTypeButtons">
+                        <mat-card-title>
+                            <button mat-button (click)="setTradeType('buy')"
+                                [class.active]="tradeType === 'buy'">Comprar</button>
+                            <button mat-button (click)="setTradeType('sell')"
+                                [class.active]="tradeType === 'sell'">Vender</button>
+                        </mat-card-title>
+                    </mat-card-header>
+
+                    <mat-card-content *ngIf="!showOrderReview">
+                        <!-- Symbol Input -->
+                        <div class="form-row">
+                            <mat-form-field appearance="outline" class="full-width">
+                                <mat-label>Símbolo</mat-label>
+                                <input matInput [(ngModel)]="tradeSymbol" (blur)="loadMarketPrice()">
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Market Price -->
+                        <div class="form-row">
+                            <div class="market-price">
+                                <span>Precio de mercado:</span>
+                                <span class="price-value">{{marketPrice | currency:'USD':'symbol':'1.2-2'}}</span>
+                            </div>
+                        </div>
+
+                        <!-- Quantity/Amount -->
+                        <div class="form-row">
+                            <mat-form-field appearance="outline" class="full-width" *ngIf="buyType === 'shares'">
+                                <mat-label>{{tradeType === 'buy' ? 'Cantidad' : 'Cantidad a vender'}}</mat-label>
+                                <input matInput type="number" [(ngModel)]="tradeAmount" min="0.0001"
+                                    (input)="calculateDollarAmount()">
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline" class="full-width" *ngIf="buyType === 'dollars'">
+                                <mat-label>Monto ($)</mat-label>
+                                <input matInput type="number" [(ngModel)]="dollarAmount" min="1"
+                                    (input)="calculateShareAmount()">
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Buy/Sell Options -->
+                        <div class="form-row">
+                            <div class="buy-options">
+                                <p>{{tradeType === 'buy' ? 'Seleccionar cómo comprar' : 'Seleccionar cómo vender'}}</p>
+                                <mat-radio-group [(ngModel)]="buyType" (change)="onBuyTypeChange()">
+                                    <mat-radio-button value="shares">Acciones</mat-radio-button>
+                                    <mat-radio-button value="dollars">Dólares</mat-radio-button>
+                                </mat-radio-group>
+                            </div>
+                        </div>
+
+                        <!-- Estimated Values -->
+                        <div class="form-row" *ngIf="marketPrice">
+                            <div class="estimated-values">
+                                <!-- For BUY operations -->
+                                <div *ngIf="tradeType === 'buy'">
+                                    <div class="estimated-row" *ngIf="buyType === 'shares'">
+                                        <span>Costo estimado:</span>
+                                        <span class="value">{{calculateTotal() |
+                                            currency:'USD':'symbol':'1.2-2'}}</span>
+                                    </div>
+                                    <div *ngIf="buyType === 'dollars'">
+                                        <div class="estimated-row">
+                                            <span>Cantidad estimada:</span>
+                                            <span class="value">{{estimatedShares | number:'1.2-6'}} acciones</span>
+                                        </div>
+                                        <div class="estimated-row">
+                                            <span>Costo estimado:</span>
+                                            <span class="value">{{dollarAmount |
+                                                currency:'USD':'symbol':'1.2-2'}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- For SELL operations -->
+                                <div *ngIf="tradeType === 'sell'">
+                                    <div class="estimated-row" *ngIf="buyType === 'shares'">
+                                        <span>Valor estimado:</span>
+                                        <span class="value">{{calculateTotal() |
+                                            currency:'USD':'symbol':'1.2-2'}}</span>
+                                    </div>
+                                    <div *ngIf="buyType === 'dollars'">
+                                        <div class="estimated-row">
+                                            <span>Cantidad estimada:</span>
+                                            <span class="value">{{estimatedShares | number:'1.2-6'}} acciones</span>
+                                        </div>
+                                        <div class="estimated-row">
+                                            <span>Valor estimado:</span>
+                                            <span class="value">{{dollarAmount |
+                                                currency:'USD':'symbol':'1.2-2'}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Order Type -->
+                        <div class="form-row">
+                            <mat-form-field appearance="outline" class="full-width">
+                                <mat-label>Tipo de orden</mat-label>
+                                <mat-select [(ngModel)]="tradeOrderType" disabled>
+                                    <mat-option value="market">Market</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Order Time -->
+                        <div class="form-row">
+                            <mat-form-field appearance="outline" class="full-width">
+                                <mat-label>Vigencia de la orden</mat-label>
+                                <mat-select [(ngModel)]="tradeTime" disabled>
+                                    <mat-option value="day">Day</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                        <button mat-raised-button color="primary" class="submit-btn" (click)="reviewOrder()">
+                            Revisar Orden
+                        </button>
+                    </mat-card-content>
+
+
+                    <!-- Order Review Section -->
+                    <mat-card-content *ngIf="showOrderReview" class="order-review">
+                        <h3>Resumen de la Orden</h3>
+
+                        <div class="review-row">
+                            <span>Tipo:</span>
+                            <span>{{tradeType === 'buy' ? 'Compra' : 'Venta'}}</span>
+                        </div>
+
+                        <div class="review-row">
+                            <span>Símbolo:</span>
+                            <span>{{tradeSymbol}}</span>
+                        </div>
+
+                        <div class="review-row">
+                            <span>Precio de mercado:</span>
+                            <span>{{marketPrice | currency:'USD':'symbol':'1.2-2'}}</span>
+                        </div>
+
+                        <div class="review-row" *ngIf="buyType === 'shares'">
+                            <span>Cantidad:</span>
+                            <span>{{tradeAmount}} acciones</span>
+                        </div>
+
+                        <div class="review-row" *ngIf="buyType === 'dollars'">
+                            <span>Monto:</span>
+                            <span>{{dollarAmount | currency:'USD':'symbol':'1.2-6'}}</span>
+                        </div>
+
+                        <div class="review-row" *ngIf="buyType === 'dollars'">
+                            <span>Cantidad estimada:</span>
+                            <span>{{estimatedShares | number:'1.2-6'}} acciones</span>
+                        </div>
+
+                        <div class="review-row">
+                            <span>Tipo de orden:</span>
+                            <span>Market</span>
+                        </div>
+
+                        <div class="review-row">
+                            <span>Vigencia de la orden:</span>
+                            <span>Day</span>
+                        </div>
+
+                        <div class="review-row total">
+                            <span>{{tradeType === 'buy' ? 'Total estimado' : 'Valor estimado'}}:</span>
+                            <span>{{calculateTotal() | currency:'USD':'symbol':'1.2-2'}}</span>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button mat-stroked-button (click)="editOrder()">Editar Orden</button>
+                            <button mat-raised-button color="primary" (click)="confirmOrder()">Confirmar Orden</button>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+    </app-sidebar>
+</div>
+<p-toast></p-toast>
