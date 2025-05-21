@@ -36,12 +36,12 @@ export class SearchFieldComponent {
           return;
         }
 
-        // Prepara los datos para el gráfico
+      
         const chartData = {
           symbol: data.symbol,
           lastPrice: data.lastPrice,
           lastRefreshed: data.lastRefreshed,
-          prices: data.prices // Asegúrate de que esto viene en la respuesta
+          prices: data.prices 
         };
 
         this.sharedData.setStockData(chartData);

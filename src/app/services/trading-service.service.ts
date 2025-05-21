@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { MessageService } from 'primeng/api';
 
 interface OrderRequest {
   symbol: string;
@@ -20,7 +19,6 @@ export class TradingServiceService {
 
   constructor(
     private http: HttpClient,
-    private messageService: MessageService
   ) { }
 
   placeOrder(accountId: string, orderData: OrderRequest): Observable<any>{
