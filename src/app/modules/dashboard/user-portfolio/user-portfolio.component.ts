@@ -3,14 +3,18 @@ import { TradingServiceService } from 'src/app/services/trading-service.service'
 import { MessageService } from 'primeng/api';
 import { MarketDataServiceService } from 'src/app/services/market-data-service.service';
 import { AuthServiceService } from 'src/app/services/auth-service.service';
-import { Router } from '@angular/router';
+import { PortfolioService, FillActivity, ParsedTransferActivity } from 'src/app/services/portfolio.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { ViewChild } from '@angular/core';
+import { AfterViewInit } from '@angular/core';
 
 @Component({
   selector: 'app-user-portfolio',
   templateUrl: './user-portfolio.component.html',
   styleUrls: ['./user-portfolio.component.css']
 })
-export class UserPortfolioComponent {
+export class UserPortfolioComponent implements OnInit, AfterViewInit {
 
   accountId: string = '';
 
@@ -21,6 +25,26 @@ export class UserPortfolioComponent {
   // Configuracion para grafico de rendimiento
   loading: boolean = false;
   errorMessage: string | null = null;
+
+
+  // Datos para la tabla de acciones adquiridas
+  fillActivities: FillActivity[] = [];
+  fillDisplayedColumns: string[] = [
+    'order_id', 'side', 'symbol', 'qty', 'order_status', 'transaction_time', 'price'
+  ];
+
+  // Datos para la tabla de órdenes recientes
+  transferActivities: ParsedTransferActivity[] = [];
+  transferDisplayedColumns: string[] = [
+    'id', 'direction', 'transfer_type', 'net_amount', 'status', 'date'
+  ];
+
+  fillDataSource = new MatTableDataSource<FillActivity>();
+  transferDataSource = new MatTableDataSource<ParsedTransferActivity>();
+
+  @ViewChild('fillPaginator') fillPaginator!: MatPaginator;
+  @ViewChild('transferPaginator') transferPaginator!: MatPaginator;
+
 
   // Panel de trading compra
   tradeSymbol: string = '';
@@ -39,18 +63,80 @@ export class UserPortfolioComponent {
     private marketData: MarketDataServiceService,
     private tradingService: TradingServiceService,
     private messageService: MessageService,
+    private portfolioService: PortfolioService
   ) { }
 
   ngOnInit() {
     this.accountId = this.authService.getCurrentAlpacaUserId() || '';
-    if (!this.accountId) {
+
+    if (this.accountId) {
+      this.loadData(this.accountId);
+      console.log('Using Alpaca account ID:', this.accountId); // For debugging
+    } else {
       console.error('No Alpaca account ID found - user might not be logged in or account not created');
       // You might want to redirect to login or show an error message
       this.showError('Error', 'No se encontró la cuenta de Alpaca. Por favor inicie sesión nuevamente.');
       return;
     }
-    console.log('Using Alpaca account ID:', this.accountId); // For debugging
   }
+
+  ngAfterViewInit() {
+    this.fillDataSource.paginator = this.fillPaginator;
+    this.transferDataSource.paginator = this.transferPaginator;
+  }
+
+  loadData(accountId: string): void {
+
+    // Cargar datos de FILL
+    this.portfolioService.getFillActivitiesByAccountId(accountId).subscribe({
+      next: (activities: FillActivity[]) => {
+        this.fillDataSource.data = activities;
+        this.loadTransferData(accountId);
+      },
+      error: (err) => {
+        console.error('Error:', err);
+      }
+    });
+  }
+
+  loadTransferData(accountId: string): void {
+    // Cargar datos de TRANS
+    this.portfolioService.getTransferActivitiesByAccountId(accountId).subscribe({
+      next: (transfers: ParsedTransferActivity[]) => {
+        this.transferDataSource.data = transfers;
+      },
+      error: (err) => {
+        console.error('Error:', err);
+      }
+    });
+  }
+
+  getStatusClass(status: string): string {
+    return `status-${status.toLowerCase().replace('_', '-')}`;
+  }
+
+  getStatusText(status: string): string {
+    const statusTexts: Record<string, string> = {
+      'filled': 'Completado',
+      'executed': 'Completado',
+      'completed': 'Completado',
+      'partial_fill': 'Parcial',
+      'partial': 'Parcial',
+      'canceled': 'Cancelado',
+      'rejected': 'Rechazado',
+      'pending': 'Pendiente'
+    };
+    return statusTexts[status.toLowerCase()] || status;
+  }
+
+  formatPrice(price: string): string {
+    return parseFloat(price).toFixed(2);
+  }
+
+  formatDate(dateString: string): string {
+    return new Date(dateString).toLocaleString();
+  }
+
 
   setTradeType(type: 'buy' | 'sell') {
     this.tradeType = type;
