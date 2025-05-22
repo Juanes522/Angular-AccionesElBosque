@@ -8,6 +8,7 @@ import { PortfolioComponent } from './modules/dashboard/portfolio/portfolio.comp
 import { AuthGuardService } from './services/auth-guard.service';
 import { FundAccountComponent } from './modules/fund-account/fund-account.component';
 import { UserPortfolioComponent } from './modules/dashboard/user-portfolio/user-portfolio.component';
+import { UserProfileComponent } from './modules/user-profile/user-profile.component';
 
 
 const routes: Routes = [
@@ -39,9 +40,10 @@ const routes: Routes = [
     path: 'fund-account', component: FundAccountComponent,
     canActivate: [AuthGuardService]
   },
-  /*{
-    path: 'profile',
-  },*/
+  {
+    path: 'profile', component: UserProfileComponent,
+    canActivate: [AuthGuardService]
+  },
   {
     path: '**', redirectTo: 'acciones-ElBosque', pathMatch: 'full'
   }

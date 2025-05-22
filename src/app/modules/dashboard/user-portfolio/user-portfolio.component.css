@@ -1,4 +1,3 @@
-/* Colores principales */
 :root {
   --primary-color: #8937ee;
   --background-color: #121212;
@@ -14,7 +13,7 @@
 /*Contenedor general del dashboard/portafolio*/
 .dashboard-container {
   height: 100vh;
-  background-color: var(--background-color);
+  background-color: #121212;
   color: var(--text-primary);
 }
 
@@ -35,7 +34,7 @@
 }
 
 .sidebar-header h3 {
-  color: var(--primary-color);
+  color: #8937ee;
   margin: 0;
 }
 
@@ -67,12 +66,8 @@
 }
 
 .portfolio-header h2 {
-  color: var(--primary-color);
+  color: #8937ee !important;
   margin-bottom: 8px;
-}
-
-.portfolio mat-card {
-  background-color: var(--card-color);
 }
 
 .portfolio-value {
@@ -98,6 +93,7 @@
 .search-field {
   width: 100%;
   max-width: 400px;
+
 }
 
 .chart {
@@ -151,49 +147,108 @@ table {
 }
 
 .mat-elevation-z8 {
-  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
-    0 8px 10px 1px rgba(0, 0, 0, 0.14),
-    0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  color: white !important;
+  background-color: #3a3a3a !important;
+  box-shadow: none;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e0e0e0;
 }
 
 .mat-header-cell {
-  font-weight: bold;
-  color: var(--text-primary);
-  background-color: var(--table-header-bg);
+  font-weight: 600;
+  color: white !important;
+  background-color: #3a3a3a !important;
+  border-bottom: 2px solid #4a4a4a !important;
+  border-right: 1px solid #4a4a4a !important;
 }
+
+.mat-mdc-header-cell {
+  color: white !important;
+  background-color: #3a3a3a !important;
+}
+
+.mat-mdc-cell {
+  color: white !important;
+  background-color: #2d2d2d !important;
+}
+
+.mat-cell {
+  border-bottom: 1px solid #4a4a4a !important;
+  border-right: 1px solid #4a4a4a !important;
+  background-color: #2d2d2d !important;
+}
+
+.mat-paginator {
+  background-color: #3a3a3a !important;
+  color: white;
+  border-radius: 0 0 8px 8px;
+}
+
+.mat-paginator-page-size,
+.mat-paginator-range-actions {
+  color: white !important;
+}
+
+.mat-select-value {
+  color: white !important;
+}
+
+/* Botones del paginador */
+.mat-paginator-navigation-previous,
+.mat-paginator-navigation-next {
+  color: white !important;
+}
+
 
 .mat-cell,
 .mat-header-cell {
+  color: white;
   padding: 12px 16px;
 }
 
 .status-badge {
-  padding: 4px 8px;
+  padding: 4px 10px;
   border-radius: 12px;
   font-size: 0.75rem;
   font-weight: 500;
-  background-color: var(--status-pending);
-  color: black;
+  background-color: #ff9800;
+  color: white;
 }
 
 .status-badge.completed {
-  background-color: var(--status-completed);
+  background-color: #4caf50;
+  color: white;
 }
 
 .buy {
-  color: var(--up-color);
+  color: #4caf50 !important;
   font-weight: 500;
 }
 
 .sell {
-  color: var(--down-color);
+  color: #f44336 !important;
   font-weight: 500;
 }
 
 mat-card {
-  background-color: var(--card-color);
+  background-color: #2d2d2d;
   border-radius: 8px;
   margin-bottom: 24px;
+}
+
+mat-label {
+  color: white;
+}
+
+mat-option {
+  color: white;
+}
+
+
+
+.input-color {
+  color: white !important;
 }
 
 @media (max-width: 768px) {
@@ -215,29 +270,35 @@ mat-card {
   margin-bottom: 1rem;
 }
 
-.trading-panel mat-card {
-  background-color: var(--card-color);
-}
-
 .trading-panel mat-card-header {
   display: flex;
   justify-content: center;
   padding: 1rem 0 0;
   margin-bottom: 1rem;
+  color: white;
 }
 
 .trading-panel mat-card-header button {
   margin: 0 0.5rem;
-  color: var(--text-secondary);
+  color: white;
 }
 
 .trading-panel mat-card-header button.active {
-  color: var(--primary-color);
-  border-bottom: 2px solid var(--primary-color);
+  color: #8937ee;
+  border-bottom: 2px solid #8937ee;
+}
+
+.color-btn-c{
+  background-color: #8937ee !important;
+}
+
+.color-btn-e{
+  background-color: white !important;
 }
 
 .form-row {
   margin-bottom: 1rem;
+  color: white;
 }
 
 .full-width {
@@ -255,7 +316,7 @@ mat-card {
 
 .market-price .price-value {
   font-weight: bold;
-  color: var(--primary-color);
+  color: white;
 }
 
 .buy-options {
@@ -292,6 +353,7 @@ mat-card {
   width: 100%;
   margin-top: 1rem;
   padding: 0.5rem;
+  background-color: #8937ee !important;
 }
 
 .order-review {
@@ -299,7 +361,7 @@ mat-card {
 }
 
 .order-review h3 {
-  color: var(--primary-color);
+  color: #8937ee;
   margin-bottom: 1.5rem;
   text-align: center;
 }
@@ -309,7 +371,8 @@ mat-card {
   justify-content: space-between;
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid white;
+  color: white;
 }
 
 .review-row.total {
@@ -347,6 +410,7 @@ mat-card {
 
 .mat-radio-button {
   margin-right: 16px;
+
 }
 
 .buy-button {

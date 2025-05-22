@@ -31,13 +31,17 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTabsModule } from '@angular/material/tabs';
+
 
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+
 import { SidebarComponent } from './modules/sidebar/sidebar.component';
 import { FundAccountComponent } from './modules/fund-account/fund-account.component';
 import { UserPortfolioComponent } from './modules/dashboard/user-portfolio/user-portfolio.component';
 import { SearchFieldComponent } from './modules/dashboard/search-field/search-field.component';
+import { UserProfileComponent } from './modules/user-profile/user-profile.component';
 
 
 @NgModule({
@@ -52,6 +56,7 @@ import { SearchFieldComponent } from './modules/dashboard/search-field/search-fi
     FundAccountComponent,
     SearchFieldComponent,
     UserPortfolioComponent,
+    UserProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -75,7 +80,8 @@ import { SearchFieldComponent } from './modules/dashboard/search-field/search-fi
     MatButtonModule,
     MatProgressSpinnerModule,
     MatTableModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatTabsModule
   ],
   providers: [
     MessageService

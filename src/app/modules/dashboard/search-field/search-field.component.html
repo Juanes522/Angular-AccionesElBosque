@@ -1,7 +1,7 @@
 <mat-form-field appearance="outline" class="search-field">
     <mat-label>Buscar símbolo (ej: AAPL)</mat-label>
-    <input matInput [(ngModel)]="searchQuery">
+    <input class="input-color" matInput [(ngModel)]="searchQuery">
     <button matSuffix mat-icon-button (click)="searchStock()">
-        <mat-icon>search</mat-icon>
+        <mat-icon class="nav-icon">search</mat-icon>
     </button>
 </mat-form-field>
