@@ -1,0 +1,108 @@
+.profile-container {
+    height: 100vh;
+}
+
+.btn-color {
+    background-color: #8937ee !important;
+    color: white !important;
+}
+
+.btn-color-a {
+    background-color: transparent !important;
+    color: white !important;
+}
+
+mat-label {
+    color: white;
+}
+
+
+.input-color {
+    color: white !important;
+}
+
+.profile-card {
+    width: 100%;
+    margin: 10px 0 10px 0;
+    background-color: #2a2a2a;
+    color: white;
+
+    mat-card-title h2 {
+        color: #8937ee;
+        margin: 20px;
+        font-size: 1.5rem;
+    }
+}
+
+.profile-tabs {
+    .mat-tab-label {
+        min-width: 120px;
+    }
+}
+
+.tab-content {
+    padding: 16px;
+
+    h3 {
+        color: #8937ee;
+        margin-top: 20px;
+        margin-bottom: 16px;
+    }
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.plan-cards {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.plan-card {
+    flex: 1;
+    min-width: 250px;
+    background-color: #1b1b1b;
+    border: 1px solid #8937ee;
+
+    &.premium {
+        border: 2px solid #8937ee;
+    }
+
+    .price {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #8937ee;
+        margin: 10px 0;
+    }
+
+    .price-options {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin: 15px 0;
+
+        .price-option {
+            margin: 5px 0;
+        }
+    }
+}
+
+@media (max-width: 600px) {
+    .plan-cards {
+        flex-direction: column;
+    }
+
+    .profile-tabs .mat-tab-label {
+        min-width: auto;
+        padding: 0 12px;
+    }
+}

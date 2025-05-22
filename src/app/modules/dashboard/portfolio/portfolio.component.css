@@ -60,15 +60,29 @@
 
 /*Estilos para el espacio de la grafica de acciones, junto con campo de busqueda*/
 .portfolio-main {
-  background-color: var(--card-color);
+  background-color: #2d2d2d;
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .portfolio-header h2 {
-  color: var(--primary-color);
+  color: #8937ee;
   margin-bottom: 8px;
+}
+
+mat-card {
+  background-color: #2d2d2d;
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+
+mat-label {
+  color: white;
+}
+
+.input-color {
+  color: white !important;
 }
 
 .portfolio-value {
@@ -103,7 +117,7 @@
 }
 
 .error-message {
-  color: var(--down-color);
+  color: white;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -117,7 +131,7 @@
 }
 
 .trading-panel mat-card {
-  background-color: var(--card-color);
+  background-color: #2d2d2d;
 }
 
 .trading-panel mat-card-header {
@@ -125,20 +139,34 @@
   justify-content: center;
   padding: 1rem 0 0;
   margin-bottom: 1rem;
+  color: white;
 }
 
 .trading-panel mat-card-header button {
   margin: 0 0.5rem;
-  color: var(--text-secondary);
+  color: white;
 }
 
 .trading-panel mat-card-header button.active {
-  color: var(--primary-color);
-  border-bottom: 2px solid var(--primary-color);
+  color: #8937ee;
+  border-bottom: 2px solid #8937ee;
+}
+
+.color-btn-c{
+  background-color: #8937ee !important;
+}
+
+.color-btn-e{
+  background-color: white !important;
+}
+
+.nav-icon-ms {
+  color: white;
 }
 
 .form-row {
   margin-bottom: 1rem;
+  color: white;
 }
 
 .full-width {
@@ -156,7 +184,7 @@
 
 .market-price .price-value {
   font-weight: bold;
-  color: var(--primary-color);
+  color: white;
 }
 
 .buy-options {
@@ -193,6 +221,7 @@
   width: 100%;
   margin-top: 1rem;
   padding: 0.5rem;
+  background-color: #8937ee !important;
 }
 
 .order-review {
@@ -200,7 +229,7 @@
 }
 
 .order-review h3 {
-  color: var(--primary-color);
+  color: #8937ee;
   margin-bottom: 1.5rem;
   text-align: center;
 }
@@ -210,7 +239,8 @@
   justify-content: space-between;
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid white;
+  color: white;
 }
 
 .review-row.total {

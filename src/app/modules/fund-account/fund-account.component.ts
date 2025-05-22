@@ -144,14 +144,13 @@ createRelationship() {
   }
 
   resetForms() {
-    this.step = 1;
+    this.step = 2;
     this.relationshipForm.reset({
       bank_account_type: 'CHECKING'
     });
     this.transferForm.reset({
       direction: 'INCOMING'
     });
-    this.relationshipId = null;
   }
 
   private showSuccess(summary: string, detail: string) {

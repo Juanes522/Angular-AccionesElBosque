@@ -6,17 +6,17 @@
     <div class="main-content">
       <div class="portfolio-main">
         <div class="portfolio-header">
-          <h2>Portafolio/acciones</h2>
+          <h2>Acciones</h2>
         </div>
 
         <div class="search-chart-container">
-          
+
 
           <div echarts [options]="chartOption" class="chart" *ngIf="!loading"></div>
           <mat-progress-spinner *ngIf="loading" mode="indeterminate" diameter="50"></mat-progress-spinner>
 
           <div *ngIf="errorMessage" class="error-message">
-            <mat-icon>error</mat-icon>
+            <mat-icon class="nav-icon-ms">error</mat-icon>
             {{errorMessage}}
           </div>
         </div>
@@ -37,14 +37,14 @@
             <div class="form-row">
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Símbolo</mat-label>
-                <input matInput [(ngModel)]="tradeSymbol" (blur)="loadMarketPrice()">
+                <input matInput class="input-color" [(ngModel)]="tradeSymbol" (blur)="loadMarketPrice()">
               </mat-form-field>
             </div>
 
             <!-- Market Price -->
             <div class="form-row">
               <div class="market-price">
-                <span>Precio de mercado:</span>
+                <span class="input-color">Precio de mercado:</span>
                 <span class="price-value">{{marketPrice | currency:'USD':'symbol':'1.2-2'}}</span>
               </div>
             </div>
@@ -53,12 +53,14 @@
             <div class="form-row">
               <mat-form-field appearance="outline" class="full-width" *ngIf="buyType === 'shares'">
                 <mat-label>{{tradeType === 'buy' ? 'Cantidad' : 'Cantidad a vender'}}</mat-label>
-                <input matInput type="number" [(ngModel)]="tradeAmount" min="0.0001" (input)="calculateDollarAmount()">
+                <input matInput class="input-color" type="number" [(ngModel)]="tradeAmount" min="0.0001"
+                  (input)="calculateDollarAmount()">
               </mat-form-field>
 
               <mat-form-field appearance="outline" class="full-width" *ngIf="buyType === 'dollars'">
                 <mat-label>Monto ($)</mat-label>
-                <input matInput type="number" [(ngModel)]="dollarAmount" min="1" (input)="calculateShareAmount()">
+                <input matInput class="input-color" type="number" [(ngModel)]="dollarAmount" min="1"
+                  (input)="calculateShareAmount()">
               </mat-form-field>
             </div>
 
@@ -190,8 +192,9 @@
             </div>
 
             <div class="action-buttons">
-              <button mat-stroked-button (click)="editOrder()">Editar Orden</button>
-              <button mat-raised-button color="primary" (click)="confirmOrder()">Confirmar Orden</button>
+              <button mat-stroked-button class="color-btn-e" (click)="editOrder()">Editar Orden</button>
+              <button mat-raised-button class="color-btn-c" color="primary" (click)="confirmOrder()">Confirmar
+                Orden</button>
             </div>
           </mat-card-content>
         </mat-card>

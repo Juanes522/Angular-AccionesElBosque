@@ -1,0 +1,167 @@
+<div class="profile-container">
+  <app-sidebar>
+    <mat-card class="profile-card">
+      <mat-card-header>
+        <mat-card-title>
+          <h2>Perfil</h2>
+        </mat-card-title>
+      </mat-card-header>
+
+      <!-- Opciones del menú -->
+      <mat-tab-group [(selectedIndex)]="selectedTab" class="profile-tabs">
+        <mat-tab label="Información del Usuario" >
+          <div class="tab-content">
+            <!-- Información Básica -->
+            <h3>Información Básica</h3>
+            <form [formGroup]="basicInfoForm" class="form-container">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Número de cuenta</mat-label>
+                <input class="input-color" matInput formControlName="accountNumber" readonly>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Correo electrónico</mat-label>
+                <input class="input-color" matInput formControlName="email" type="email">
+                <mat-error *ngIf="basicInfoForm.get('email')?.invalid">
+                  Ingrese un correo válido
+                </mat-error>
+              </mat-form-field>
+            </form>
+
+            <!-- Perfil Financiero -->
+            <h3>Perfil Financiero</h3>
+            <form [formGroup]="financialProfileForm" class="form-container">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Ingreso anual (USD)</mat-label>
+                <input class="input-color" matInput formControlName="annualIncome" type="number" min="0">
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Patrimonio neto (USD)</mat-label>
+                <input class="input-color" matInput formControlName="netWorth" type="number" min="0">
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Activos invertibles (USD)</mat-label>
+                <input class="input-color" matInput formControlName="investableAssets" type="number" min="0">
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Fuente de fondos</mat-label>
+                <mat-select formControlName="fundingSource">
+                  <mat-option value="employment">Empleo</mat-option>
+                  <mat-option value="investments">Inversiones</mat-option>
+                  <mat-option value="inheritance">Herencia</mat-option>
+                  <mat-option value="savings">Ahorros</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <button mat-raised-button class="btn-color" (click)="saveFinancialProfile()">
+                Guardar Información de Perfil 
+              </button>
+            </form>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Seguridad">
+          <div class="tab-content">
+            <h3>Actualizar Contraseña</h3>
+            <form [formGroup]="passwordForm" class="form-container">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Contraseña actual</mat-label>
+                <input class="input-color" matInput formControlName="currentPassword" [type]="hideCurrentPassword ? 'password' : 'text'" required>
+                <mat-icon matSuffix (click)="hideCurrentPassword = !hideCurrentPassword">
+                  {{hideCurrentPassword ? 'visibility_off' : 'visibility'}}
+                </mat-icon>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Nueva contraseña</mat-label>
+                <input class="input-color" matInput formControlName="newPassword" [type]="hideNewPassword ? 'password' : 'text'" required>
+                <mat-icon matSuffix (click)="hideNewPassword = !hideNewPassword">
+                  {{hideNewPassword ? 'visibility_off' : 'visibility'}}
+                </mat-icon>
+                <mat-hint>Mínimo 8 caracteres, 1 mayúscula, 1 número</mat-hint>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Confirmar nueva contraseña</mat-label>
+                <input class="input-color" matInput formControlName="confirmPassword" [type]="hideConfirmPassword ? 'password' : 'text'" required>
+                <mat-icon matSuffix (click)="hideConfirmPassword = !hideConfirmPassword">
+                  {{hideConfirmPassword ? 'visibility_off' : 'visibility'}}
+                </mat-icon>
+              </mat-form-field>
+
+              <button class="btn-color" mat-raised-button color="primary" (click)="updatePassword()" 
+                      [disabled]="passwordForm.invalid || passwordForm.pristine">
+                Actualizar Contraseña
+              </button>
+            </form>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Cambio de Plan">
+          <div class="tab-content">
+            <h3>Selecciona tu Plan</h3>
+            <div class="plan-cards">
+              <!-- Plan Básico -->
+              <mat-card class="plan-card">
+                <mat-card-header>
+                  <mat-card-title class="input-color">Plan Básico</mat-card-title>
+                </mat-card-header>
+                <mat-card-content class="input-color">
+                  <p>Acceso a funciones esenciales</p>
+                  <p>Gráficos básicos</p>
+                  <p>Soporte estándar</p>
+                  <p class="price">Gratis</p>
+                </mat-card-content>
+                <mat-card-actions>
+                  <button mat-button class="btn-color" *ngIf="currentPlan !== 'basic'" (click)="changePlan('basic')">
+                    SELECCIONAR
+                  </button>
+                  <button mat-button class="btn-color-a" *ngIf="currentPlan === 'basic'" disabled>
+                    ACTUAL
+                  </button>
+                </mat-card-actions>
+              </mat-card>
+
+              <!-- Plan Premium -->
+              <mat-card class="plan-card premium">
+                <mat-card-header>
+                  <mat-card-title class="input-color">Plan Premium</mat-card-title>
+                </mat-card-header>
+                <mat-card-content class="input-color">
+                  <p>Acceso completo a todas las funciones</p>
+                  <p>Gráficos avanzados</p>
+                  <p>Soporte prioritario</p>
+                  <div class="price-options">
+                    <mat-radio-group [(ngModel)]="premiumOption">
+                      <mat-radio-button value="monthly" class="price-option">
+                        $12/mes
+                      </mat-radio-button>
+                      <mat-radio-button value="annual" class="price-option">
+                        $120/año (¡Ahorra $24!)
+                      </mat-radio-button>
+                    </mat-radio-group>
+                  </div>
+                </mat-card-content>
+                <mat-card-actions>
+                  <button  mat-raised-button class="btn-color"
+                          *ngIf="currentPlan !== 'premium'" 
+                          (click)="changePlan('premium')"
+                          [disabled]="!premiumOption">
+                    ACTUALIZAR
+                  </button>
+                  <button mat-raised-button class="btn-color-a" 
+                          *ngIf="currentPlan === 'premium'" disabled>
+                    PLAN ACTUAL
+                  </button>
+                </mat-card-actions>
+              </mat-card>
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card>
+  </app-sidebar>
+</div>

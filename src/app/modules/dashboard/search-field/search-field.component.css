@@ -6,3 +6,15 @@
   width: 100%;
   max-width: 400px;
 }
+
+.input-color{
+  color: white !important;
+}
+
+.nav-icon{
+  color: white;
+}
+
+mat-label {
+  color: white;
+}

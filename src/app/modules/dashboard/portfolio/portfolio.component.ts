@@ -33,7 +33,7 @@ export class PortfolioComponent implements OnInit {
   tradeTime: string = 'day';
   buyType: string = 'shares';
   tradeType: 'buy' | 'sell' = 'buy';
-  marketPrice: number | null = null;
+  marketPrice: number | null = 205;
   dollarAmount: number = 100;
   estimatedShares: number = 0;
   showOrderReview: boolean = false;

@@ -9,8 +9,7 @@ import { Router } from '@angular/router';
 })
 export class AuthServiceService {
 
-
-
+  
   private API_SERVER = "http://localhost:8085/alpaca/accounts/create";
   private API_SERVER_LOGIN = "http://localhost:8085/alpaca/check";
   private API_SERVER_GET_ALPACA_ID = "http://localhost:8085/user/getalpacaid";
@@ -26,6 +25,10 @@ export class AuthServiceService {
   ) {
     this.loadAuthData();
    }
+
+getCurrentUser(){
+
+}
 
 // In AuthServiceService
 getCurrentAlpacaUserId(): string {

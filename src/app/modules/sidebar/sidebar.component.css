@@ -1,132 +1,126 @@
-:root {
-    --primary-color: #8937ee;
-    --background-color: #121212;
-    --card-color: #1e1e1e;
-    --text-primary: #ffffff;
-    --text-secondary: #b3b3b3;
-    --active-color: rgba(137, 55, 238, 0.2);
-  }
-  
-  .sidenav-container {
-    height: 100vh;
-    display: flex;
-  }
-  
-  .sidenav {
-    width: 250px;
-    background-color: var(--card-color);
-    display: flex;
-    flex-direction: column;
-    transition: width 0.3s ease;
-    overflow: hidden;
-  }
-  
-  .sidebar-header {
-    padding: 1rem;
-    text-align: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    flex-shrink: 0;
-    
-    .sidebar-title {
-      color: var(--primary-color);
-      margin: 0;
-      font-weight: 500;
-      font-size: 1.2rem;
-      white-space: nowrap;
-      transition: all 0.3s ease;
-    }
-  }
-  
-  .sidebar-content {
-    display: flex;
-    flex-direction: column;
-    height: calc(100% - 68px);
-    overflow-y: auto;
-  }
-  
-  .mat-nav-list {
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .nav-items {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .mat-list-item {
-    color: var(--text-secondary) !important;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    min-height: 48px;
-    box-sizing: border-box;
-    
-    &:hover {
-      background-color: rgba(255, 255, 255, 0.05) !important;
-      color: var(--text-primary) !important;
-    }
-    
-    &.active {
-      color: var(--primary-color) !important;
-      background-color: var(--active-color) !important;
-      
-      .nav-icon {
-        color: var(--primary-color);
-      }
-    }
-  }
-  
-  .nav-icon {
-    margin: 0 16px 0 8px;
-    color: var(--text-secondary);
-    flex-shrink: 0;
-    width: 24px;
-    text-align: center;
-  }
-  
-  .nav-text {
+.sidenav-container {
+  height: 100vh;
+  display: flex;
+  background-color: #1e1e1e;
+}
+
+.sidenav {
+  width: 250px;
+  background-color: #161616;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s ease;
+  overflow: hidden;
+}
+
+.sidebar-header {
+  padding: 1rem;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+
+  .sidebar-title {
+    color: #8937ee;
+    margin: 0;
+    font-weight: 500;
+    font-size: 1.2rem;
     white-space: nowrap;
-    transition: opacity 0.3s ease;
+    transition: all 0.3s ease;
   }
-  
-  .spacer {
-    flex: 1;
-    min-height: 16px;
+}
+
+.sidebar-content {
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 68px);
+  overflow-y: auto;
+}
+
+.mat-nav-list {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-items {
+  display: flex;
+  flex-direction: column;
+}
+
+.mat-list-item {
+  color: var(--text-secondary) !important;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  box-sizing: border-box;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    color: var(--text-primary) !important;
   }
-  
-  .logout-item {
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    margin-top: auto;
-  }
-  
-  .content {
-    background-color: var(--background-color);
-    padding: 20px;
-    flex: 1;
-    min-height: 100vh;
-  }
-  
-  @media (max-width: 768px) {
-    .sidenav {
-      width: auto;
-      
-      .sidebar-title {
-        opacity: 0;
-        width: 0;
-        margin: 0;
-        padding: 0;
-      }
-      
-      .nav-icon {
-        margin: 0 auto;
-      }
+
+  &.active {
+    color: var(--primary-color) !important;
+    background-color: var(--active-color) !important;
+
+    .nav-icon {
+      color: var(--primary-color);
     }
   }
-  
-  @media (max-width: 480px) {
-    .sidenav {
-      width: 56px;
+}
+
+.nav-icon {
+  margin: 0 16px 0 8px;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+  width: 24px;
+  text-align: center;
+  color: white;
+}
+
+.nav-text {
+  white-space: nowrap;
+  transition: opacity 0.3s ease;
+  color: white;
+}
+
+.spacer {
+  flex: 1;
+  min-height: 16px;
+}
+
+.logout-item {
+  border-top: 1px solid rgba(0, 0, 0, 0);
+  margin-top: auto;
+}
+
+.content {
+  background-color: var(--background-color);
+  padding: 20px;
+  flex: 1;
+  min-height: 100vh;
+}
+
+@media (max-width: 768px) {
+  .sidenav {
+    width: auto;
+
+    .sidebar-title {
+      opacity: 0;
+      width: 0;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-icon {
+      margin: 0 auto;
     }
   }
+}
+
+@media (max-width: 480px) {
+  .sidenav {
+    width: 56px;
+  }
+}
