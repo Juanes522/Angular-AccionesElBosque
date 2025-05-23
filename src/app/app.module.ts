@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 
 import * as echarts from 'echarts';
 import { NgxEchartsModule } from 'ngx-echarts';
@@ -83,7 +84,7 @@ import { UserProfileComponent } from './modules/user-profile/user-profile.compon
     MatPaginatorModule,
     MatTabsModule
   ],
-  providers: [
+  providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy },
     MessageService
   ],
   bootstrap: [AppComponent]
