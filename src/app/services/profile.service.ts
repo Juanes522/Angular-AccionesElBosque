@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { of } from 'rxjs';
 
 @Injectable({
@@ -7,42 +8,36 @@ import { of } from 'rxjs';
 })
 export class ProfileService {
 
-  private API_SERVER_USER_DATA = "http://localhost:8085/";
+  private API_GET_USER = 'http://localhost:8085/user/getuserbyalpacaid';
+  private API_CHANGE_PASSWORD = 'http://localhost:8085/user/changepassword';
 
   constructor(
     private http: HttpClient
   ) { }
 
-  private mockUserData = {
-    accountNumber: 'ACC-123456',
-    email: 'usuario@ejemplo.com',
-    financialProfile: {
-      annualIncome: 75000,
-      netWorth: 150000,
-      investableAssets: 50000,
-      fundingSource: 'employment'
-    },
-    plan: 'basic'
-  };
 
-  getUserData() {
-    return of(this.mockUserData);
+  getUserByAlpacaId(alpacaId: string): Observable<any> {
+    return this.http.get(`${this.API_GET_USER}?alpacaId=${alpacaId}`);
   }
+
+  changePassword(email: string, oldPassword: string, newPassword: string): Observable<any> {
+    const params = new HttpParams()
+      .set('email', email)
+      .set('oldPassword', oldPassword)
+      .set('newPassword', newPassword);
+
+    return this.http.post(this.API_CHANGE_PASSWORD, null, { params });
+  }
+
 
   updateFinancialProfile(data: any) {
     console.log('Datos financieros actualizados:', data);
-    this.mockUserData.financialProfile = data;
     return of({ success: true });
   }
 
-  updatePassword(current: string, newPassword: string) {
-    console.log('Contraseña actualizada');
-    return of({ success: true });
-  }
 
   updatePlan(plan: string, option?: string) {
     console.log('Plan actualizado a:', plan, 'Opción:', option);
-    this.mockUserData.plan = plan;
     return of({ success: true });
   }
 }

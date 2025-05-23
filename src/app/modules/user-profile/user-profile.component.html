@@ -9,57 +9,38 @@
 
       <!-- Opciones del menú -->
       <mat-tab-group [(selectedIndex)]="selectedTab" class="profile-tabs">
-        <mat-tab label="Información del Usuario" >
+        <mat-tab label="Información del Usuario">
           <div class="tab-content">
+
             <!-- Información Básica -->
             <h3>Información Básica</h3>
             <form [formGroup]="basicInfoForm" class="form-container">
               <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Número de cuenta</mat-label>
-                <input class="input-color" matInput formControlName="accountNumber" readonly>
+                <mat-label>Documento</mat-label>
+                <input class="input-color" matInput formControlName="cardId" readonly>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Nombres</mat-label>
+                <input class="input-color" matInput formControlName="firstName" readonly>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Apellidos</mat-label>
+                <input class="input-color" matInput formControlName="lastName" readonly>
               </mat-form-field>
 
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Correo electrónico</mat-label>
-                <input class="input-color" matInput formControlName="email" type="email">
-                <mat-error *ngIf="basicInfoForm.get('email')?.invalid">
-                  Ingrese un correo válido
-                </mat-error>
+                <input class="input-color" matInput formControlName="email" readonly>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Teléfono</mat-label>
+                <input class="input-color" matInput formControlName="phone" readonly>
               </mat-form-field>
             </form>
 
-            <!-- Perfil Financiero -->
-            <h3>Perfil Financiero</h3>
-            <form [formGroup]="financialProfileForm" class="form-container">
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Ingreso anual (USD)</mat-label>
-                <input class="input-color" matInput formControlName="annualIncome" type="number" min="0">
-              </mat-form-field>
-
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Patrimonio neto (USD)</mat-label>
-                <input class="input-color" matInput formControlName="netWorth" type="number" min="0">
-              </mat-form-field>
-
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Activos invertibles (USD)</mat-label>
-                <input class="input-color" matInput formControlName="investableAssets" type="number" min="0">
-              </mat-form-field>
-
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Fuente de fondos</mat-label>
-                <mat-select formControlName="fundingSource">
-                  <mat-option value="employment">Empleo</mat-option>
-                  <mat-option value="investments">Inversiones</mat-option>
-                  <mat-option value="inheritance">Herencia</mat-option>
-                  <mat-option value="savings">Ahorros</mat-option>
-                </mat-select>
-              </mat-form-field>
-
-              <button mat-raised-button class="btn-color" (click)="saveFinancialProfile()">
-                Guardar Información de Perfil 
-              </button>
-            </form>
           </div>
         </mat-tab>
 
@@ -68,8 +49,14 @@
             <h3>Actualizar Contraseña</h3>
             <form [formGroup]="passwordForm" class="form-container">
               <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Correo electrónico</mat-label>
+                <input class="input-color" matInput formControlName="email" type="email" required>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Contraseña actual</mat-label>
-                <input class="input-color" matInput formControlName="currentPassword" [type]="hideCurrentPassword ? 'password' : 'text'" required>
+                <input class="input-color" matInput formControlName="currentPassword"
+                  [type]="hideCurrentPassword ? 'password' : 'text'" required>
                 <mat-icon matSuffix (click)="hideCurrentPassword = !hideCurrentPassword">
                   {{hideCurrentPassword ? 'visibility_off' : 'visibility'}}
                 </mat-icon>
@@ -77,23 +64,14 @@
 
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Nueva contraseña</mat-label>
-                <input class="input-color" matInput formControlName="newPassword" [type]="hideNewPassword ? 'password' : 'text'" required>
+                <input class="input-color" matInput formControlName="newPassword"
+                  [type]="hideNewPassword ? 'password' : 'text'" required>
                 <mat-icon matSuffix (click)="hideNewPassword = !hideNewPassword">
                   {{hideNewPassword ? 'visibility_off' : 'visibility'}}
                 </mat-icon>
-                <mat-hint>Mínimo 8 caracteres, 1 mayúscula, 1 número</mat-hint>
               </mat-form-field>
 
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Confirmar nueva contraseña</mat-label>
-                <input class="input-color" matInput formControlName="confirmPassword" [type]="hideConfirmPassword ? 'password' : 'text'" required>
-                <mat-icon matSuffix (click)="hideConfirmPassword = !hideConfirmPassword">
-                  {{hideConfirmPassword ? 'visibility_off' : 'visibility'}}
-                </mat-icon>
-              </mat-form-field>
-
-              <button class="btn-color" mat-raised-button color="primary" (click)="updatePassword()" 
-                      [disabled]="passwordForm.invalid || passwordForm.pristine">
+              <button mat-raised-button class="btn-color" (click)="updatePassword()">
                 Actualizar Contraseña
               </button>
             </form>
@@ -146,14 +124,11 @@
                   </div>
                 </mat-card-content>
                 <mat-card-actions>
-                  <button  mat-raised-button class="btn-color"
-                          *ngIf="currentPlan !== 'premium'" 
-                          (click)="changePlan('premium')"
-                          [disabled]="!premiumOption">
+                  <button mat-raised-button class="btn-color" *ngIf="currentPlan !== 'premium'"
+                    (click)="changePlan('premium')" [disabled]="!premiumOption">
                     ACTUALIZAR
                   </button>
-                  <button mat-raised-button class="btn-color-a" 
-                          *ngIf="currentPlan === 'premium'" disabled>
+                  <button mat-raised-button class="btn-color-a" *ngIf="currentPlan === 'premium'" disabled>
                     PLAN ACTUAL
                   </button>
                 </mat-card-actions>
@@ -165,3 +140,5 @@
     </mat-card>
   </app-sidebar>
 </div>
+
+<p-toast></p-toast>
