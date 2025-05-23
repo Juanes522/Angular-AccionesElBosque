@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 })
 export class AuthServiceService {
 
-  
+
   private API_SERVER = "http://localhost:8085/alpaca/accounts/create";
   private API_SERVER_LOGIN = "http://localhost:8085/alpaca/check";
   private API_SERVER_GET_ALPACA_ID = "http://localhost:8085/user/getalpacaid";
@@ -17,6 +17,7 @@ export class AuthServiceService {
 
   private authToken: string | null = null;
   private tokenExpiration: Date | null = null;
+  private currentUserEmail: string | null = null;
 
   constructor(
     private http: HttpClient,
@@ -24,39 +25,61 @@ export class AuthServiceService {
     private router: Router
   ) {
     this.loadAuthData();
-   }
-
-getCurrentUser(){
-
-}
-
-// In AuthServiceService
-getCurrentAlpacaUserId(): string {
-  if (!this.currentAlpacaUserId) {
-    console.warn('Requested AlpacaUserId but it was null');
-    // You might want to try loading from storage if you persist it
+    this.loadUserData();
   }
-  return this.currentAlpacaUserId || '';
-}
+
+  private saveUserData(email: string, alpacaUserId: string): void {
+    localStorage.setItem('userData', JSON.stringify({
+      email: email,
+      alpacaUserId: alpacaUserId
+    }));
+  }
+
+  private loadUserData(): void {
+    const userData = localStorage.getItem('userData');
+    if (userData) {
+      const parsedData = JSON.parse(userData);
+      this.currentUserEmail = parsedData.email;
+      this.currentAlpacaUserId = parsedData.alpacaUserId;
+    }
+  }
+
+  // In AuthServiceService
+  getCurrentAlpacaUserId(): string {
+    if (!this.currentAlpacaUserId) {
+      console.warn('Requested AlpacaUserId but it was null');
+      // You might want to try loading from storage if you persist it
+    }
+    return this.currentAlpacaUserId || '';
+  }
   // Método para obtener el alpacaUserId
   private getAlpacaUserId(email: string): Observable<any> {
-  console.log('Obteniendo alpacaUserId para el email:', email);
-  const params = new HttpParams().set('email', email);
-  return this.http.get(this.API_SERVER_GET_ALPACA_ID, { params });
-}
+    console.log('Obteniendo alpacaUserId para el email:', email);
+    const params = new HttpParams().set('email', email);
+    return this.http.get(this.API_SERVER_GET_ALPACA_ID, { params });
+  }
 
-  login(credentials: {email: string, password: string}): Observable<any> {
+  login(credentials: { email: string, password: string }): Observable<any> {
     const params = new HttpParams()
       .set('email', credentials.email)
       .set('password', credentials.password);
 
     return new Observable(observer => {
-      this.http.get(this.API_SERVER_LOGIN, {params}).subscribe({
+      this.http.get(this.API_SERVER_LOGIN, { params }).subscribe({
         next: (loginResponse) => {
           this.getAlpacaUserId(credentials.email).subscribe({
             next: (alpacaIdResponse) => {
+
+              if (!alpacaIdResponse.alpacaUserId) {
+                observer.error('No se pudo obtener el id de usuario');
+                return;
+              }
+
               this.currentAlpacaUserId = alpacaIdResponse.alpacaUserId; // Almacena el ID
+              this.currentUserEmail = credentials.email;
               console.log('Alpaca User ID almacenado:', this.currentAlpacaUserId);
+
+              this.saveUserData(credentials.email, this.currentAlpacaUserId!);
 
               const localToken = this.generateLocalToken();
               this.authToken = localToken;
@@ -81,8 +104,15 @@ getCurrentAlpacaUserId(): string {
     });
   }
 
+  getCurrentUser(): { email: string | null, alpacaUserId: string | null } {
+    return {
+      email: this.currentUserEmail,
+      alpacaUserId: this.currentAlpacaUserId
+    };
+  }
+
   registerUser(formData: any): Observable<any> {
-     const userData = {
+    const userData = {
       "contact": {
         "email_address": formData.email,
         "phone_number": formData.phone,
@@ -148,8 +178,8 @@ getCurrentAlpacaUserId(): string {
         "family_name": "wyz",
         "email_address": ""
       },
-      "password" : formData.password,
-      "idCommission" : 0
+      "password": formData.password,
+      "idCommission": 0
 
     };
 
@@ -194,6 +224,9 @@ getCurrentAlpacaUserId(): string {
 
   logout(): void {
     this.clearAuth();
+    localStorage.removeItem('userData');
+    this.currentUserEmail = null;
+    this.currentAlpacaUserId = null;
     this.router.navigate(['/login']);
   }
 }

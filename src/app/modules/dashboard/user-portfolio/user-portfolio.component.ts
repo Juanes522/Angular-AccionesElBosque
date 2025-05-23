@@ -3,11 +3,12 @@ import { TradingServiceService } from 'src/app/services/trading-service.service'
 import { MessageService } from 'primeng/api';
 import { MarketDataServiceService } from 'src/app/services/market-data-service.service';
 import { AuthServiceService } from 'src/app/services/auth-service.service';
-import { PortfolioService, FillActivity, ParsedTransferActivity } from 'src/app/services/portfolio.service';
+import { PortfolioService, FillActivity, ParsedTransferActivity, AcceptedOrder } from 'src/app/services/portfolio.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { ViewChild } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-user-portfolio',
@@ -26,6 +27,11 @@ export class UserPortfolioComponent implements OnInit, AfterViewInit {
   loading: boolean = false;
   errorMessage: string | null = null;
 
+  acceptedOrders: AcceptedOrder[] = [];
+  combinedOrdersDataSource = new MatTableDataSource<any>();
+  combinedDisplayedColumns: string[] = [
+    'order_id', 'side', 'symbol', 'qty', 'status', 'date', 'price'
+  ];
 
   // Datos para la tabla de acciones adquiridas
   fillActivities: FillActivity[] = [];
@@ -44,6 +50,7 @@ export class UserPortfolioComponent implements OnInit, AfterViewInit {
 
   @ViewChild('fillPaginator') fillPaginator!: MatPaginator;
   @ViewChild('transferPaginator') transferPaginator!: MatPaginator;
+  @ViewChild('combinedPaginator') combinedPaginator!: MatPaginator;
 
 
   // Panel de trading compra
@@ -70,7 +77,7 @@ export class UserPortfolioComponent implements OnInit, AfterViewInit {
     this.accountId = this.authService.getCurrentAlpacaUserId() || '';
 
     if (this.accountId) {
-      this.loadData(this.accountId);
+      this.loadCombinedOrders(this.accountId);
       console.log('Using Alpaca account ID:', this.accountId); // For debugging
     } else {
       console.error('No Alpaca account ID found - user might not be logged in or account not created');
@@ -83,8 +90,10 @@ export class UserPortfolioComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.fillDataSource.paginator = this.fillPaginator;
     this.transferDataSource.paginator = this.transferPaginator;
+    this.combinedOrdersDataSource.paginator = this.combinedPaginator;
   }
 
+  /*
   loadData(accountId: string): void {
 
     // Cargar datos de FILL
@@ -98,6 +107,7 @@ export class UserPortfolioComponent implements OnInit, AfterViewInit {
       }
     });
   }
+  */
 
   loadTransferData(accountId: string): void {
     // Cargar datos de TRANS
@@ -111,22 +121,109 @@ export class UserPortfolioComponent implements OnInit, AfterViewInit {
     });
   }
 
+  //------
+
+  loadCombinedOrders(accountId: string): void {
+    forkJoin([
+      this.portfolioService.getAcceptedOrdersByAccountId(accountId),
+      this.portfolioService.getFillActivitiesByAccountId(accountId)
+    ]).subscribe({
+      next: ([acceptedOrders, filledOrders]) => {
+        // Procesar y combinar las órdenes
+        this.processOrders(acceptedOrders, filledOrders);
+        this.loadTransferData(accountId);
+      },
+      error: (err) => console.error('Error loading orders:', err)
+    });
+  }
+
+  private processOrders(acceptedOrders: AcceptedOrder[], filledOrders: FillActivity[]): void {
+    const filledOrdersMap = new Map(filledOrders.map(order => [order.order_id, order]));
+    const acceptedOrdersMap = new Map(acceptedOrders.map(order => [order.id, order]));
+
+    const combinedFromAccepted = acceptedOrders.map(acceptedOrder => {
+      const filledOrder = filledOrdersMap.get(acceptedOrder.id);
+
+      if (filledOrder) {
+        return {
+          order_id: acceptedOrder.id,
+          side: acceptedOrder.side,
+          symbol: acceptedOrder.symbol,
+          qty: filledOrder.qty, 
+          status: 'filled',
+          order_status: 'filled',
+          date: filledOrder.transaction_time,
+          price: filledOrder.price,
+          original_status: 'filled'
+        };
+      }
+
+      // Orden aceptada pero no ejecutada aún
+      return {
+        order_id: acceptedOrder.id,
+        side: acceptedOrder.side,
+        symbol: acceptedOrder.symbol,
+        qty: acceptedOrder.qty,
+        status: acceptedOrder.status,
+        order_status: acceptedOrder.status,
+        date: acceptedOrder.created_at,
+        price: acceptedOrder.filled_avg_price || '-',
+        original_status: 'accepted'
+      };
+    });
+
+    // Procesar órdenes FILL que no tienen orden aceptada
+    const combinedFromFilled = filledOrders
+      .filter(filledOrder => !acceptedOrdersMap.has(filledOrder.order_id))
+      .map(filledOrder => ({
+        order_id: filledOrder.order_id,
+        side: filledOrder.side,
+        symbol: filledOrder.symbol,
+        qty: filledOrder.qty,
+        status: 'filled',
+        order_status: 'filled',
+        date: filledOrder.transaction_time,
+        price: filledOrder.price,
+        original_status: 'filled'
+      }));
+
+    // Combinar ambos conjuntos y ordenar por fecha
+    this.combinedOrdersDataSource.data = [...combinedFromAccepted, ...combinedFromFilled]
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  }
+
+  //------
+
+  /*
   getStatusClass(status: string): string {
     return `status-${status.toLowerCase().replace('_', '-')}`;
   }
+  */
+
+  getStatusClass(status: string): string {
+    const statusMap: Record<string, string> = {
+      'filled': 'completed',
+      'accepted': 'pending',
+      'partially_filled': 'partial',
+      'pending': 'pending',
+      'canceled': 'canceled',
+      'rejected': 'rejected',
+      'executed': 'executed'
+    };
+    return statusMap[status.toLowerCase()] || 'pending';
+  }
 
   getStatusText(status: string): string {
-    const statusTexts: Record<string, string> = {
+    const textMap: Record<string, string> = {
       'filled': 'Completado',
-      'executed': 'Completado',
-      'completed': 'Completado',
-      'partial_fill': 'Parcial',
-      'partial': 'Parcial',
+      'accepted': 'Aceptado',
+      'partially_filled': 'Parcialmente Ejecutado',
+      'pending': 'Pendiente',
       'canceled': 'Cancelado',
       'rejected': 'Rechazado',
-      'pending': 'Pendiente'
+      'executed': 'Completado'
     };
-    return statusTexts[status.toLowerCase()] || status;
+    return textMap[status.toLowerCase()] || status;
   }
 
   formatPrice(price: string): string {

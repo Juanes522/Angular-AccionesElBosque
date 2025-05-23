@@ -45,7 +45,8 @@
                         <div class="form-row">
                             <mat-form-field appearance="outline" class="full-width">
                                 <mat-label>Símbolo</mat-label>
-                                <input  matInput [(ngModel)]="tradeSymbol" class="input-color" (blur)="loadMarketPrice()">
+                                <input matInput [(ngModel)]="tradeSymbol" class="input-color"
+                                    (blur)="loadMarketPrice()">
                             </mat-form-field>
                         </div>
 
@@ -205,7 +206,8 @@
 
                         <div class="action-buttons">
                             <button mat-stroked-button class="color-btn-e" (click)="editOrder()">Editar Orden</button>
-                            <button mat-raised-button class="color-btn-c" (click)="confirmOrder()">Confirmar Orden</button>
+                            <button mat-raised-button class="color-btn-c" (click)="confirmOrder()">Confirmar
+                                Orden</button>
                         </div>
                     </mat-card-content>
                 </mat-card>
@@ -222,7 +224,7 @@
 
                         <div class="table-container">
                             <div class="table-wrapper">
-                                <table mat-table [dataSource]="fillDataSource" class="mat-elevation-z8">
+                                <table mat-table [dataSource]="combinedOrdersDataSource" class="mat-elevation-z8">
                                     <!-- Id de orden -->
                                     <ng-container matColumnDef="order_id">
                                         <th mat-header-cell *matHeaderCellDef>ID de orden</th>
@@ -253,7 +255,7 @@
                                     </ng-container>
 
                                     <!-- Estado -->
-                                    <ng-container matColumnDef="order_status">
+                                    <ng-container matColumnDef="status">
                                         <th mat-header-cell *matHeaderCellDef>Estado</th>
                                         <td mat-cell *matCellDef="let element">
                                             <span class="status-badge" [class]="getStatusClass(element.order_status)">
@@ -263,9 +265,9 @@
                                     </ng-container>
 
                                     <!-- Fecha Transacción -->
-                                    <ng-container matColumnDef="transaction_time">
+                                    <ng-container matColumnDef="date">
                                         <th mat-header-cell *matHeaderCellDef>Fecha Transacción</th>
-                                        <td mat-cell *matCellDef="let element">{{element.transaction_time |
+                                        <td mat-cell *matCellDef="let element">{{element.date |
                                             date:'medium'}}
                                         </td>
                                     </ng-container>
@@ -273,16 +275,16 @@
                                     <!-- Precio -->
                                     <ng-container matColumnDef="price">
                                         <th mat-header-cell *matHeaderCellDef>Precio</th>
-                                        <td mat-cell *matCellDef="let element">{{element.price |
-                                            currency:'USD':'symbol':'1.2-2'}}</td>
+                                        <td mat-cell *matCellDef="let element">{{element.price === '-' ? '-' :
+                                            (element.price | currency:'USD':'symbol':'1.2-2')}}</td>
                                     </ng-container>
 
-                                    <tr mat-header-row *matHeaderRowDef="fillDisplayedColumns"></tr>
-                                    <tr mat-row *matRowDef="let row; columns: fillDisplayedColumns;"></tr>
+                                    <tr mat-header-row *matHeaderRowDef="combinedDisplayedColumns"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: combinedDisplayedColumns;"></tr>
                                 </table>
                             </div>
 
-                            <mat-paginator class="paginator mat-paginator" #fillPaginator [pageSize]="5"
+                            <mat-paginator class="paginator mat-paginator" #combinedPaginator [pageSize]="5"
                                 showFirstLastButtons aria-label="Seleccionar página de transacciones">
                             </mat-paginator>
 
@@ -350,8 +352,8 @@
                                     <tr mat-row *matRowDef="let row; columns: transferDisplayedColumns;"></tr>
                                 </table>
                             </div>
-                            <mat-paginator class="paginator mat-paginator" #transferPaginator [pageSize]="5" showFirstLastButtons
-                                aria-label="Seleccionar página de transferencias">
+                            <mat-paginator class="paginator mat-paginator" #transferPaginator [pageSize]="5"
+                                showFirstLastButtons aria-label="Seleccionar página de transferencias">
                             </mat-paginator>
                         </div>
                     </div>

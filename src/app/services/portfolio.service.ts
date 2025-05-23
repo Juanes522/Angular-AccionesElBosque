@@ -34,6 +34,23 @@ export interface ParsedTransferActivity extends TransferActivity {
   transfer_type?: string;
 }
 
+
+export interface AcceptedOrder {
+  id: string;
+  client_order_id: string;
+  created_at: string;
+  updated_at: string;
+  submitted_at: string;
+  filled_at: string | null;
+  symbol: string;
+  qty: string;
+  filled_qty: string;
+  filled_avg_price: string | null;
+  order_type: string;
+  side: 'buy' | 'sell';
+  status: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -41,7 +58,22 @@ export class PortfolioService {
 
   private API_BASE = "http://localhost:8085/alpaca";
 
+
   constructor(private http: HttpClient) { }
+  
+  getAcceptedOrdersByAccountId(accountId: string): Observable<AcceptedOrder[]> {
+    const url = `${this.API_BASE}/${accountId}/Accepted`;
+    return this.http.get<AcceptedOrder[]>(url).pipe(
+      map(orders => orders.map(order => ({
+        ...order,
+        order_id: order.id,
+        qty: this.formatNumber(order.qty),
+        filled_qty: this.formatNumber(order.filled_qty || '0'),
+        filled_avg_price: order.filled_avg_price ? this.formatNumber(order.filled_avg_price) : null,
+        normalized_status: this.normalizeStatus(order.status)
+      })))
+    );
+  }
 
   getFillActivitiesByAccountId(accountId: string): Observable<FillActivity[]> {
     const url = `${this.API_BASE}/${accountId}/activities/FILL`;
@@ -94,4 +126,5 @@ export class PortfolioService {
     };
     return statusMap[status.toLowerCase()] || status.toLowerCase();
   }
+  
 }
