@@ -149,7 +149,7 @@ export class UserPortfolioComponent implements OnInit, AfterViewInit {
           order_id: acceptedOrder.id,
           side: acceptedOrder.side,
           symbol: acceptedOrder.symbol,
-          qty: filledOrder.qty, 
+          qty: filledOrder.qty,
           status: 'filled',
           order_status: 'filled',
           date: filledOrder.transaction_time,
@@ -366,6 +366,7 @@ export class UserPortfolioComponent implements OnInit, AfterViewInit {
     this.tradingService.placeOrder(this.accountId, orderData).subscribe({
       next: (response) => {
         this.showSuccess('Orden ejecutada', 'La orden se ha completado exitosamente');
+        this.showInfo('Consulta los movimientos', 'Consulta tus movimientos abajo');
         this.resetAfterOrder();
       },
       error: (err) => {
@@ -389,6 +390,15 @@ export class UserPortfolioComponent implements OnInit, AfterViewInit {
   private showSuccess(summary: string, detail: string) {
     this.messageService.add({
       severity: 'success',
+      summary,
+      detail,
+      life: 5000
+    });
+  }
+
+  private showInfo(summary: string, detail: string) {
+    this.messageService.add({
+      severity: 'info',
       summary,
       detail,
       life: 5000

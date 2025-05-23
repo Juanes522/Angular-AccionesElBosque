@@ -20,7 +20,7 @@ export class RegisterComponentComponent {
   hidePassword: boolean = true;
 
   togglePasswordVisibility(): void {
-  this.hidePassword = !this.hidePassword;
+    this.hidePassword = !this.hidePassword;
   }
 
   employmentStatuses: SelectOption[] = [
@@ -98,8 +98,17 @@ export class RegisterComponentComponent {
         },
         error: (err) => {
           this.isLoading = false;
-          this.showError('Error en registro', err.error?.message || 'Ocurrió un error al registrar');
-          console.log(this.registerForm.value); // Se corrigió el error de sintaxis
+          if (err.status === 409) {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Caracteres invalidos en el registro (ej: ´, á, ñ)',
+              life: 3000
+            });
+          } else {
+            this.showError('Error en registro', err.error?.message || 'Ocurrió un error al registrar');
+            console.log(this.registerForm.value);
+          }
         }
       });
     } else {
