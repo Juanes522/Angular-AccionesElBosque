@@ -60,7 +60,7 @@ export class UserPortfolioComponent implements OnInit, AfterViewInit {
   tradeTime: string = 'day';
   buyType: string = 'shares';
   tradeType: 'buy' | 'sell' = 'buy';
-  marketPrice: number | null = 205.11;
+  marketPrice: number | null = null;
   dollarAmount: number = 100;
   estimatedShares: number = 0;
   showOrderReview: boolean = false;
