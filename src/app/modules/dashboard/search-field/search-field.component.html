@@ -1,7 +1,20 @@
-<mat-form-field appearance="outline" class="search-field">
-    <mat-label>Buscar símbolo (ej: AAPL)</mat-label>
-    <input class="input-color" matInput [(ngModel)]="searchQuery">
-    <button matSuffix mat-icon-button (click)="searchStock()">
-        <mat-icon class="nav-icon">search</mat-icon>
-    </button>
-</mat-form-field>
+<div class="search-container">
+    <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Buscar símbolo (ej: AAPL)</mat-label>
+        <input class="input-color" matInput [(ngModel)]="searchQuery">
+        <button matSuffix mat-icon-button (click)="searchStock()">
+            <mat-icon class="nav-icon">search</mat-icon>
+        </button>
+    </mat-form-field>
+
+    <div class="values-display">
+        <div class="value-item">
+            <span class="value-label">Portafolio:</span>
+            <span class="value-amount">{{ portfolioValue | currency:'USD':'symbol':'1.2-2' }}</span>
+        </div>
+        <div class="value-item">
+            <span class="value-label">Poder adquisitivo:</span>
+            <span class="value-amount">{{ buyingPower | currency:'USD':'symbol':'1.2-2' }}</span>
+        </div>
+    </div>
+</div>
