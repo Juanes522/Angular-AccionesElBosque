@@ -56,11 +56,11 @@ export interface AcceptedOrder {
 })
 export class PortfolioService {
 
-  private API_BASE = "http://localhost:8085/alpaca";
+  private API_BASE = "https://caring-encouragement-production-c223.up.railway.app/alpaca";
 
 
   constructor(private http: HttpClient) { }
-  
+
   getAcceptedOrdersByAccountId(accountId: string): Observable<AcceptedOrder[]> {
     const url = `${this.API_BASE}/${accountId}/Accepted`;
     return this.http.get<AcceptedOrder[]>(url).pipe(
@@ -126,5 +126,5 @@ export class PortfolioService {
     };
     return statusMap[status.toLowerCase()] || status.toLowerCase();
   }
-  
+
 }

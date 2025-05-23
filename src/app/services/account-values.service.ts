@@ -8,7 +8,7 @@ import { map } from 'rxjs';
 })
 export class AccountValuesService {
 
-  private API_BASE = "http://localhost:8085/alpaca";
+  private API_BASE = "https://caring-encouragement-production-c223.up.railway.app/alpaca";
 
   constructor(
     private http: HttpClient
