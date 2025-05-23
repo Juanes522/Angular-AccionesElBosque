@@ -8,8 +8,8 @@ import { of } from 'rxjs';
 })
 export class ProfileService {
 
-  private API_GET_USER = 'http://localhost:8085/user/getuserbyalpacaid';
-  private API_CHANGE_PASSWORD = 'http://localhost:8085/user/changepassword';
+  private API_GET_USER = 'https://caring-encouragement-production-c223.up.railway.app/user/getuserbyalpacaid';
+  private API_CHANGE_PASSWORD = 'https://caring-encouragement-production-c223.up.railway.app/user/changepassword';
 
   constructor(
     private http: HttpClient

@@ -10,9 +10,9 @@ import { Router } from '@angular/router';
 export class AuthServiceService {
 
 
-  private API_SERVER = "http://localhost:8085/alpaca/accounts/create";
-  private API_SERVER_LOGIN = "http://localhost:8085/alpaca/check";
-  private API_SERVER_GET_ALPACA_ID = "http://localhost:8085/user/getalpacaid";
+  private API_SERVER = "https://caring-encouragement-production-c223.up.railway.app/alpaca/accounts/create";
+  private API_SERVER_LOGIN = "https://caring-encouragement-production-c223.up.railway.app/alpaca/check";
+  private API_SERVER_GET_ALPACA_ID = "https://caring-encouragement-production-c223.up.railway.app/user/getalpacaid";
   private currentAlpacaUserId: string | null = null;
 
   private authToken: string | null = null;

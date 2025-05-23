@@ -7,9 +7,9 @@ import { Observable } from 'rxjs';
 })
 export class AchService {
 
-  private API_SERVER_ACH_RELATION = "http://localhost:8085/alpaca/accounts/{account_id}/ach_relationships";
-  private API_SERVER_ACH_TRANSFER = "http://localhost:8085/alpaca/accounts/{account_id}/transfers";
-  private API_SERVER_ACH_STATUS = "http://localhost:8085/alpaca/accounts/{account_id}/ach-relationships";
+  private API_SERVER_ACH_RELATION = "https://caring-encouragement-production-c223.up.railway.app/alpaca/accounts/{account_id}/ach_relationships";
+  private API_SERVER_ACH_TRANSFER = "https://caring-encouragement-production-c223.up.railway.app/alpaca/accounts/{account_id}/transfers";
+  private API_SERVER_ACH_STATUS = "https://caring-encouragement-production-c223.up.railway.app/alpaca/accounts/{account_id}/ach-relationships";
 
   constructor(
     private http: HttpClient
